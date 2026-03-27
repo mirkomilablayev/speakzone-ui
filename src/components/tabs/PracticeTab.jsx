@@ -3,12 +3,28 @@ import Card from "../shared/Card";
 import { PrimaryButton, OutlineButton } from "../shared/Button";
 
 const TOOLS = [
-  { id: "vocab",     icon: "📚", title: "Topic Vocabulary", desc: "Topic-based IELTS vocabulary with examples", color: "bg-blue-500/10 text-blue-400" },
-  { id: "cuecard",   icon: "🎴", title: "Cue Card Generator", desc: "Generate unlimited Part 2 topics",    color: "bg-purple-500/10 text-purple-400" },
-  { id: "template",  icon: "📐", title: "Speaking Templates", desc: "High-scoring answer structures",        color: "bg-green-500/10 text-green-400" },
-  { id: "timer",     icon: "⏱️", title: "Timer Trainer",    desc: "Train speaking time (30–120 sec)",   color: "bg-orange-500/10 text-orange-400" },
-  { id: "phrases",   icon: "💎", title: "High Score Phrases", desc: "Band 7–9 phrases for speaking",      color: "bg-teal-500/10 text-teal-400" },
+  { id: "vocab",     icon: "📚", title: "Topic Vocabulary", desc: "Topic-based IELTS vocabulary", color: "blue" },
+  { id: "cuecard",   icon: "🎴", title: "Cue Card Generator", desc: "Generate unlimited Part 2 topics", color: "purple" },
+  { id: "template",  icon: "📝", title: "Speaking Templates", desc: "High-scoring answer structures", color: "teal" },
+  { id: "timer",     icon: "⏱️", title: "Timer Trainer",    desc: "Train speaking time (30–120s)", color: "orange" },
+  { id: "phrases",   icon: "💎", title: "High Score Phrases", desc: "Band 7–9 phrases for speaking", color: "gold" },
 ];
+
+const ACCENT_COLORS = {
+  blue: "border-l-accent bg-accent/5",
+  purple: "border-l-purple bg-purple/5",
+  teal: "border-l-teal bg-teal/5",
+  orange: "border-l-orange bg-orange/5",
+  gold: "border-l-gold bg-gold/5",
+};
+
+const ICON_BG = {
+  blue: "bg-accent/10 text-accent",
+  purple: "bg-purple/10 text-purple",
+  teal: "bg-teal/10 text-teal",
+  orange: "bg-orange/10 text-orange",
+  gold: "bg-gold/10 text-gold",
+};
 
 export default function PracticeTab() {
   const [selectedTool, setSelectedTool] = useState(null);
@@ -61,62 +77,64 @@ export default function PracticeTab() {
     <div className="flex flex-col gap-6 pb-24 animate-tab-in">
       <div className="flex flex-col gap-1.5 pt-1">
         <h1 className="font-bold text-2xl text-white">Daily Practice</h1>
-        <p className="text-muted text-sm">Master specialized IELTS speaking skills</p>
+        <p className="text-muted text-sm opacity-60">Master specialized IELTS speaking skills</p>
       </div>
 
       {/* FEATURED: Improve My Answer */}
       <Card 
         onClick={() => setSelectedTool("improve")}
-        className="bg-primary-gradient border-none p-6 flex flex-col gap-5 relative overflow-hidden group active:scale-[0.99] transition-all cursor-pointer"
+        className="bg-primary-gradient border-none p-6 flex flex-col gap-4 relative overflow-hidden group active:scale-[0.99] transition-all cursor-pointer"
       >
          <div className="absolute -right-4 -top-4 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-700" />
-         <div className="relative z-10 flex flex-col gap-1">
-            <span className="text-white/60 text-[10px] font-black uppercase tracking-widest">HABIT BUILDER</span>
-            <h2 className="text-white font-black text-2xl mt-1">Improve My Answer ✨</h2>
-            <p className="text-white/80 text-xs mt-2 max-w-[240px] leading-relaxed">
-               Instant band 8.0+ refinement with linguistic deep-dives.
-            </p>
-            <button className="mt-4 bg-white text-accent font-black px-6 py-2.5 rounded-xl text-xs active:scale-95 transition-all w-fit uppercase tracking-widest">
-               Get Started ⚡️
+         <div className="relative z-10 flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+               <span className="text-2xl leading-none">✨</span>
+               <h2 className="text-white font-black text-xl">Improve My Answer</h2>
+            </div>
+            <p className="text-white/80 text-[13px] leading-snug">AI-powered refinement for Band 8.5+</p>
+            <button className="mt-2 bg-white text-accent font-black px-8 py-3 rounded-full text-[11px] uppercase tracking-widest shadow-lg group-hover:scale-105 transition-transform w-fit">
+               Improve Answer ✨
             </button>
          </div>
       </Card>
 
-      {/* DAILY QUESTION (REORDERED SECOND) */}
+      {/* DAILY QUESTION (COMPACT) */}
       <Card 
          onClick={() => setSelectedTool("daily")}
-         className="bg-purple-gradient border-none p-5 flex items-center justify-between group active:scale-[0.99] transition-all cursor-pointer"
+         className="bg-purple-gradient border-none p-6 flex flex-col gap-4 relative overflow-hidden group active:scale-[0.99] transition-all cursor-pointer"
       >
-         <div className="flex flex-col gap-1 text-left">
-            <div className="flex items-center gap-2">
-               <span className="text-xl">👉</span>
-               <h3 className="text-white font-black text-lg">Daily Question</h3>
+         <div className="flex items-center justify-between relative z-10">
+            <div className="flex flex-col gap-2">
+               <div className="flex items-center gap-2">
+                  <span className="text-2xl leading-none">👉</span>
+                  <h3 className="text-white font-black text-xl tracking-tight">Daily Question</h3>
+               </div>
+               <p className="text-white/80 text-[13px] leading-snug">New speaking challenge every 24h</p>
             </div>
-            <p className="text-white/70 text-xs">One focused challenge every day</p>
-         </div>
-         <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center text-white font-black text-lg group-hover:scale-110 transition-transform">
-            GO
+            <div className="w-14 h-14 bg-white/20 border border-white/10 rounded-full flex items-center justify-center text-white text-2xl group-hover:scale-110 transition-transform shadow-xl">
+               →
+            </div>
          </div>
       </Card>
 
-      {/* TOOLS GRID */}
+      {/* TOOLS GRID (REFINED ROWS) */}
       <div className="flex flex-col gap-3">
          <h3 className="text-muted text-[11px] font-bold uppercase tracking-widest px-1">Practice Tools</h3>
-         <div className="grid grid-cols-1 gap-3">
+         <div className="flex flex-col gap-2.5">
             {TOOLS.map(t => (
               <Card 
                 key={t.id} 
                 onClick={() => setSelectedTool(t.id)}
-                className="flex items-center gap-4 py-5 hover:bg-card-raised active:scale-[0.98] transition-all cursor-pointer group"
+                className={`flex items-center gap-4 py-3.5 px-4 border-y-0 border-r-0 border-l-[4px] border-white/5 active:scale-[0.98] transition-all cursor-pointer group shadow-sm ${ACCENT_COLORS[t.color]}`}
               >
-                 <div className={`w-12 h-12 rounded-2xl ${t.color} flex items-center justify-center text-2xl group-hover:scale-110 transition-transform`}>
+                 <div className={`w-11 h-11 rounded-xl ${ICON_BG[t.color]} border border-white/5 flex items-center justify-center text-xl group-hover:scale-105 transition-transform shadow-lg`}>
                     {t.icon}
                  </div>
                  <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-                    <span className="text-white font-black text-[15px] truncate">{t.title}</span>
-                    <span className="text-muted text-[11px] leading-snug">{t.desc}</span>
+                    <span className="text-white font-black text-[15px] tracking-tight">{t.title}</span>
+                    <span className="text-muted text-[11px] font-medium opacity-80">{t.desc}</span>
                  </div>
-                 <span className="ml-auto text-muted text-xl opacity-30 group-hover:translate-x-1 transition-transform">›</span>
+                 <span className="text-muted text-xl opacity-30 group-hover:translate-x-1 transition-transform font-light">›</span>
               </Card>
             ))}
          </div>
