@@ -11,65 +11,78 @@ const CRITERIA = [
 const BAR_DATA = [55, 70, 60, 80, 65, 75, 85];
 const BAR_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-export default function ProgressTab() {
+export default function ProgressTab({ onGetPremium }) {
   return (
     <div className="flex flex-col gap-4">
       <h1 className="font-syne font-bold text-2xl text-white pt-1">Progress</h1>
 
       <div className="relative">
         {/* Blurred background content */}
-        <div className="progress-blur flex flex-col gap-4 select-none pointer-events-none">
-          {/* Band Score */}
-          <Card className="flex flex-col items-center py-8">
-            <span className="font-syne font-black text-7xl text-accent">6.5</span>
-            <span className="text-muted text-sm mt-2 font-medium">Overall Band Score</span>
-          </Card>
+        <div className="progress-blur flex flex-col gap-4 select-none pointer-events-none filter blur-[8px] opacity-40">
+          {/* Overall Stats */}
+          <div className="grid grid-cols-2 gap-3">
+            <Card className="flex flex-col items-center py-5">
+              <span className="font-syne font-black text-4xl text-accent">6.5</span>
+              <span className="text-muted text-[10px] mt-1 font-bold uppercase tracking-wider">Overall Band</span>
+            </Card>
+            <Card className="flex flex-col items-center py-5">
+              <span className="font-syne font-black text-4xl text-purple">24</span>
+              <span className="text-muted text-[10px] mt-1 font-bold uppercase tracking-wider">Total Sessions</span>
+            </Card>
+          </div>
 
-          {/* Criteria Bars */}
+          {/* Detailed breakdown */}
           <Card>
-            <h3 className="font-syne font-semibold text-white mb-4">Criteria Breakdown</h3>
+            <h3 className="font-syne font-semibold text-white mb-4 text-sm">Detailed Breakdown</h3>
             <div className="flex flex-col gap-3">
               {CRITERIA.map((c) => (
                 <div key={c.name} className="flex items-center gap-3">
-                  <span className="text-slate-400 text-xs w-24 shrink-0">{c.name}</span>
-                  <div className="flex-1 h-2 bg-card-raised rounded-full overflow-hidden">
+                  <span className="text-slate-400 text-[10px] w-20 shrink-0 uppercase font-bold tracking-tight">{c.name}</span>
+                  <div className="flex-1 h-1.5 bg-card-raised rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-primary-gradient rounded-full criteria-bar-fill"
+                      className="h-full bg-primary-gradient rounded-full"
                       style={{ width: `${c.pct}%` }}
                     />
                   </div>
-                  <span className="text-accent font-semibold text-sm w-7 text-right">{c.score}</span>
+                  <span className="text-white font-bold text-sm w-7 text-right">{c.score}</span>
                 </div>
               ))}
             </div>
           </Card>
 
-          {/* Mini Bar Chart */}
+          {/* Activity Chart */}
           <Card>
-            <h3 className="font-syne font-semibold text-white mb-4">Last 7 Sessions</h3>
-            <div className="flex items-end justify-between gap-1.5 h-20">
-              {BAR_DATA.map((h, i) => (
-                <div key={i} className="flex flex-col items-center gap-1 flex-1">
-                  <div
-                    className={`w-full rounded-t-md ${i === 6 ? "bg-primary-gradient" : "bg-card-raised"}`}
-                    style={{ height: `${h}%` }}
-                  />
-                  <span className="text-[9px] text-muted">{BAR_DAYS[i]}</span>
-                </div>
+            <h3 className="font-syne font-semibold text-white mb-4 text-sm">Activity Heatmap</h3>
+            <div className="grid grid-cols-7 gap-1.5 h-16">
+              {Array.from({ length: 28 }).map((_, i) => (
+                <div 
+                  key={i} 
+                  className={`rounded-sm border border-black/5 ${
+                    [2, 5, 8, 12, 14, 18, 22, 25].includes(i) ? "bg-accent/40" : 
+                    [4, 10, 16, 20, 24].includes(i) ? "bg-accent/80 shadow-[0_0_8px_rgba(79,142,247,0.3)]" : 
+                    "bg-card-raised"
+                  }`} 
+                />
               ))}
             </div>
           </Card>
         </div>
 
         {/* Premium lock overlay */}
-        <div className="absolute inset-0 flex items-center justify-center z-10">
-          <div className="bg-card/95 border border-subtle rounded-xl3 p-6 mx-4 text-center shadow-card backdrop-blur-sm">
-            <div className="text-5xl mb-3">🔒</div>
-            <h2 className="font-syne font-bold text-xl text-white mb-2">Premium Feature</h2>
-            <p className="text-slate-400 text-sm leading-relaxed mb-5">
-              Unlock to see your band score history, session recordings, and detailed analytics
+        <div className="absolute inset-0 flex items-center justify-center z-10 px-4">
+          <div className="bg-card/80 border border-white/10 rounded-xl3 p-8 text-center shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-md">
+            <div className="w-16 h-16 bg-gold/10 rounded-full flex items-center justify-center mx-auto mb-5 border border-gold/20 shadow-[0_0_15px_rgba(245,197,24,0.15)]">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-gold">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+            </div>
+            <h2 className="font-syne font-extrabold text-2xl text-white mb-2">Premium Analytics</h2>
+            <p className="text-slate-400 text-sm leading-relaxed mb-8 max-w-[240px] mx-auto">
+              Get access to detailed band score history, session recordings, and personalized AI coaching.
             </p>
-            <PrimaryButton id="btn-get-premium">👑 Get Premium</PrimaryButton>
+            <PrimaryButton id="btn-get-premium" onClick={onGetPremium}>
+              👑 Get Premium Now
+            </PrimaryButton>
           </div>
         </div>
       </div>

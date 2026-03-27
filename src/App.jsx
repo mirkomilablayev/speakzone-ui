@@ -9,6 +9,7 @@ import RankTab from "./components/tabs/RankTab";
 import SearchModal from "./components/modals/SearchModal";
 import CallScreen from "./components/modals/CallScreen";
 import PostCallRating from "./components/modals/PostCallRating";
+import PremiumModal from "./components/modals/PremiumModal";
 
 const TABS = {
   home:     HomeTab,
@@ -23,6 +24,7 @@ export default function App() {
   const [searching,  setSearching]  = useState(false);
   const [inCall,     setInCall]     = useState(false);
   const [showRating, setShowRating] = useState(false);
+  const [showPremium, setShowPremium] = useState(false);
 
   const openSearch = () => setSearching(true);
   const cancelSearch = () => setSearching(false);
@@ -47,6 +49,9 @@ export default function App() {
     setActiveTab("home");
   };
 
+  const openPremium = () => setShowPremium(true);
+  const closePremium = () => setShowPremium(false);
+
   const TabComponent = TABS[activeTab];
 
   return (
@@ -63,6 +68,7 @@ export default function App() {
             <TabComponent
               onStartSession={() => { setActiveTab("match"); openSearch(); }}
               onFindPartner={openSearch}
+              onGetPremium={openPremium}
             />
           </div>
         </main>
@@ -74,6 +80,7 @@ export default function App() {
         <SearchModal open={searching}  onCancel={cancelSearch} onConnected={onConnected} />
         <CallScreen  open={inCall}     onEnd={endCall} />
         <PostCallRating open={showRating} onSubmit={submitRating} onSkip={skipRating} />
+        <PremiumModal open={showPremium} onClose={closePremium} />
       </div>
     </div>
   );

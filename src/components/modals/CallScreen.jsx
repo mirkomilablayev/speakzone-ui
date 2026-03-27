@@ -60,14 +60,16 @@ export default function CallScreen({ open, onEnd }) {
         </div>
 
         {/* Name */}
-        <h2 className="font-syne font-bold text-white mt-4 mb-2" style={{ fontSize: 20 }}>Asilbek</h2>
+        <div className="flex items-center gap-2 mt-4 mb-2">
+          <h2 className="font-syne font-bold text-white" style={{ fontSize: 20 }}>Asilbek</h2>
+          <PremiumBadge size={16} />
+        </div>
 
         {/* Badges row */}
         <div className="flex items-center gap-2 flex-wrap justify-center">
           <span className="bg-accent/15 border border-accent/30 text-accent text-xs font-semibold px-3 py-1 rounded-full">
             Upper Intermediate
           </span>
-          <PremiumBadge small />
         </div>
 
         {/* ── 3. Role badge ── */}
