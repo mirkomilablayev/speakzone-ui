@@ -8,8 +8,7 @@ const FIELD_ROWS = [
   { icon: "👤", label: "Full Name", value: "Mirkomil Zafarov" },
   { icon: "🔖", label: "Username",  value: "@mirkomil_speaks" },
   { icon: "🎂", label: "Birthday",  value: "Jan 15, 1998" },
-  { icon: "📍", label: "Region",    value: "Tashkent" },
-  { icon: "🏘️", label: "District",  value: "Yunusobod" },
+  { icon: "📍", label: "Region",    value: "Tashkent City" },
   { icon: "📊", label: "Current IELTS Score", value: "6.5" },
   { icon: "🎯", label: "Target IELTS Score",  value: "7.5" },
 ];

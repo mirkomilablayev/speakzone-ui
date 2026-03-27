@@ -73,9 +73,6 @@ export default function App() {
       {/* App shell — 430px max, full dvh */}
       <div className="relative flex flex-col w-full max-w-app h-dvh bg-bg overflow-hidden">
 
-        {/* Dev banner */}
-        <DevBanner />
-
         {/* Scrollable content */}
         <main className="flex-1 overflow-y-auto overflow-x-hidden hide-scrollbar">
           <div key={activeTab} className="animate-tab-in px-4 pt-4">

@@ -3,8 +3,10 @@ import Card from "../shared/Card";
 import { PrimaryButton } from "../shared/Button";
 
 const REGIONS = [
-  "Tashkent", "Samarkand", "Fergana", "Bukhara",
-  "Namangan", "Andijan", "Qashqadaryo", "Other"
+  "Tashkent City", "Tashkent Region", "Samarkand", "Fergana", 
+  "Namangan", "Andijan", "Bukhara", "Navoi", 
+  "Kashkadarya", "Surkhandarya", "Jizzakh", "Khorezm", 
+  "Syrdarya", "Republic of Karakalpakstan"
 ];
 
 const SCORES = ["0", "4.0", "4.5", "5.0", "5.5", "6.0", "6.5", "7.0", "7.5", "8.0", "8.5", "9.0"];
@@ -22,8 +24,7 @@ export default function OnboardingFlow({ onComplete }) {
     username: "@mirkomil_speaks",
     fullName: "Mirkomil Zafarov",
     birthday: "1998-01-15",
-    region: "Tashkent",
-    district: "",
+    region: "",
     currentScore: 6, // Index in SCORES
     targetScore: 9,  // Index in SCORES
   });
@@ -88,7 +89,7 @@ export default function OnboardingFlow({ onComplete }) {
   const progress = (step / 6) * 100;
 
   const renderStep = () => {
-    const commonClasses = `flex flex-col gap-6 px-6 pt-10 transition-all duration-300 ${isAnimating ? "opacity-0 translate-x-10" : "opacity-100 translate-x-0"}`;
+    const commonClasses = `flex flex-col h-full gap-6 px-6 pt-6 transition-all duration-300 ${isAnimating ? "opacity-0 translate-x-10" : "opacity-100 translate-x-0"}`;
 
     switch (step) {
       case 1:
@@ -194,56 +195,60 @@ export default function OnboardingFlow({ onComplete }) {
                    className="w-full bg-card-raised border border-subtle px-5 py-4 rounded-xl2 text-white placeholder:text-muted focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none transition-all font-medium"
                  />
                </div>
+               
                <div className="flex flex-col gap-2 px-1">
                  <label className="text-[11px] text-muted font-bold uppercase tracking-widest">Birthday</label>
                  <div className="grid grid-cols-3 gap-3">
-                   {/* Month Selector */}
+                   {/* Month */}
                    <select 
                      value={formData.birthday.split("-")[1]}
                      onChange={e => {
                        const parts = formData.birthday.split("-");
                        setFormData({...formData, birthday: `${parts[0]}-${e.target.value}-${parts[2]}`});
                      }}
-                     className="bg-card-raised border border-subtle px-3 py-4 rounded-xl2 text-white outline-none focus:border-accent appearance-none text-center font-bold"
+                     className="bg-card-raised border border-subtle rounded-xl2 text-white focus:border-accent font-bold outline-none overflow-y-auto"
+                     size="6"
                    >
                      {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].map((m, i) => (
-                       <option key={m} value={String(i + 1).padStart(2, '0')}>{m}</option>
+                       <option key={m} value={String(i + 1).padStart(2, '0')} className="py-2">{m}</option>
                      ))}
                    </select>
 
-                   {/* Day Selector */}
+                   {/* Day */}
                    <select 
                      value={formData.birthday.split("-")[2]}
                      onChange={e => {
                        const parts = formData.birthday.split("-");
                        setFormData({...formData, birthday: `${parts[0]}-${parts[1]}-${e.target.value}`});
                      }}
-                     className="bg-card-raised border border-subtle px-3 py-4 rounded-xl2 text-white outline-none focus:border-accent appearance-none text-center font-bold"
+                     className="bg-card-raised border border-subtle rounded-xl2 text-white focus:border-accent font-bold outline-none overflow-y-auto"
+                     size="6"
                    >
                      {Array.from({ length: 31 }, (_, i) => (
-                       <option key={i+1} value={String(i + 1).padStart(2, '0')}>{i + 1}</option>
+                       <option key={i+1} value={String(i + 1).padStart(2, '0')} className="py-2">{i + 1}</option>
                      ))}
                    </select>
 
-                   {/* Year Selector */}
+                   {/* Year */}
                    <select 
                      value={formData.birthday.split("-")[0]}
                      onChange={e => {
                        const parts = formData.birthday.split("-");
                        setFormData({...formData, birthday: `${e.target.value}-${parts[1]}-${parts[2]}`});
                      }}
-                     className="bg-card-raised border border-subtle px-3 py-4 rounded-xl2 text-white outline-none focus:border-accent appearance-none text-center font-bold"
+                     className="bg-card-raised border border-subtle rounded-xl2 text-white focus:border-accent font-bold outline-none overflow-y-auto"
+                     size="6"
                    >
                      {Array.from({ length: 50 }, (_, i) => (
-                       <option key={2010-i} value={String(2010 - i)}>{2010 - i}</option>
+                       <option key={2010-i} value={String(2010 - i)} className="py-2">{2010 - i}</option>
                      ))}
                    </select>
                  </div>
-                 <p className="text-[10px] text-muted/60 mt-1 ml-1">Month / Day / Year</p>
+                 <p className="text-[10px] text-muted/60 mt-1 ml-1">Select Month / Day / Year by scrolling</p>
                </div>
             </div>
 
-            <div className="mt-auto mb-10">
+            <div className="mt-8 mb-10">
                <PrimaryButton onClick={nextStep} disabled={!formData.fullName || !formData.birthday}>Continue →</PrimaryButton>
             </div>
           </div>
@@ -255,36 +260,20 @@ export default function OnboardingFlow({ onComplete }) {
             <div className="flex flex-col gap-2">
               <span className="text-4xl">📍</span>
               <h2 className="font-syne font-bold text-2xl text-white">Where Are You From?</h2>
-              <p className="text-muted text-sm">Helps us match you with nearby speakers</p>
+              <p className="text-muted text-sm">Select your region in Uzbekistan</p>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 mt-2">
+            <select 
+              value={formData.region}
+              onChange={e => setFormData({...formData, region: e.target.value})}
+              size="10"
+              className="w-full bg-card-raised border border-subtle rounded-xl2 text-white focus:border-accent font-bold outline-none overflow-y-auto animate-slide-in-up"
+            >
+              <option value="" disabled className="text-muted py-2">Select a region...</option>
               {REGIONS.map(r => (
-                <button
-                  key={r}
-                  onClick={() => setFormData({...formData, region: r})}
-                  className={`py-3 px-4 rounded-xl border font-bold text-sm transition-all duration-200 active:scale-95 ${
-                    formData.region === r 
-                      ? "bg-primary-gradient border-transparent text-white shadow-primary-glow"
-                      : "bg-card-raised border-subtle text-slate-400"
-                  }`}
-                >
-                  {r}
-                </button>
+                <option key={r} value={r} className="py-3 px-4">{r}</option>
               ))}
-            </div>
-
-            {formData.region && (
-              <div className="flex flex-col gap-1.5 px-1 animate-slide-in-up">
-                <input 
-                  type="text" 
-                  placeholder="Enter your district (optional)"
-                  value={formData.district}
-                  onChange={e => setFormData({...formData, district: e.target.value})}
-                  className="w-full bg-card-raised border border-subtle px-5 py-4 rounded-xl2 text-white placeholder:text-muted focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none transition-all font-medium"
-                />
-              </div>
-            )}
+            </select>
 
             <div className="mt-auto mb-10">
                <PrimaryButton onClick={nextStep} disabled={!formData.region}>Continue →</PrimaryButton>
