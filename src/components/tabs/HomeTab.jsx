@@ -41,7 +41,7 @@ export default function HomeTab({ onStartSession, onOpenProfile }) {
          <div className="bg-white/5 p-3 rounded-xl">
             <p className="text-slate-300 text-xs font-medium italic">"Fix fluency mistakes in Part 2..."</p>
          </div>
-         <button className="w-full py-3 bg-white/5 border border-accent/30 rounded-xl text-accent text-xs font-black uppercase tracking-widest hover:bg-accent/5 transition-all">
+         <button className="w-full py-4 bg-primary-gradient border border-white/10 rounded-xl text-white text-xs font-black uppercase tracking-widest shadow-primary-glow active:scale-[0.98] transition-all">
             Improve Answer ✨
          </button>
       </Card>
@@ -50,33 +50,32 @@ export default function HomeTab({ onStartSession, onOpenProfile }) {
       <div className="flex flex-col gap-3">
          <button 
            onClick={onStartSession}
-           className="bg-primary-gradient p-8 rounded-3xl flex flex-col gap-1 items-start group active:scale-[0.98] transition-all shadow-primary-glow border border-white/20 relative overflow-hidden text-left"
+           className="bg-primary-gradient p-8 rounded-[32px] flex flex-col gap-1 items-center text-center group active:scale-[0.98] transition-all shadow-primary-glow border border-white/20 relative overflow-hidden"
          >
            <div className="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
-           <h3 className="text-white font-black text-2xl relative z-10 leading-tight">Start Speaking Test (15 min)</h3>
-           <p className="text-white/80 text-sm mt-1 font-medium relative z-10">🎯 Get band score + AI feedback</p>
+           <h3 className="text-white font-black text-[22px] relative z-10 leading-none">Start Speaking Test</h3>
+           <p className="text-white/40 text-[11px] mt-2 font-bold relative z-10 uppercase tracking-widest">~15 min • Get band score + AI feedback</p>
            
-           <div className="mt-8 bg-white text-accent font-black px-10 py-3 rounded-2xl text-sm relative z-10 shadow-xl group-hover:scale-105 transition-transform animate-pulse-slow">
+           <div className="mt-8 bg-white text-accent font-black px-12 py-3.5 rounded-2xl text-[13px] relative z-10 shadow-xl group-hover:scale-105 transition-transform">
               Start Test Now ⚡️
            </div>
-         </button>
 
-         {/* 4. URGENCY LIMITS */}
-         <div className="flex items-center justify-center gap-2 py-1">
-            <span className="w-1.5 h-1.5 bg-red rounded-full animate-pulse" />
-            <span className="text-red text-[10px] font-black uppercase tracking-widest">Only 3 free tests remaining today</span>
-         </div>
+           {/* 4. URGENCY LIMITS (NOW INSIDE PILL) */}
+           <div className="mt-6 py-1.5 px-4 bg-black/20 rounded-full border border-white/5 relative z-10">
+              <span className="text-white/40 text-[9px] font-black uppercase tracking-[0.2em]">3 free tests remaining today</span>
+           </div>
+         </button>
       </div>
 
       {/* 5. NEXT STEP (SIMPLIFIED ROADMAP) */}
       <div className="flex flex-col gap-3">
          <h3 className="text-muted text-[11px] font-bold uppercase tracking-widest px-1">Next Step</h3>
-         <Card className="flex items-center justify-between p-5 bg-card-raised border-white/5 active:scale-[0.99] transition-all cursor-pointer group">
+         <Card className="flex items-center justify-between p-6 bg-card-raised border-white/5 active:scale-[0.99] transition-all cursor-pointer group">
             <div className="flex flex-col gap-1">
                <h4 className="text-white font-black text-lg">Topic: Infrastructure</h4>
                <p className="text-muted text-[11px] font-medium">Improve vocabulary & ideas</p>
             </div>
-            <button className="w-12 h-12 bg-accent rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-primary-glow group-hover:rotate-12 transition-all">
+            <button className="w-14 h-14 bg-primary-gradient rounded-full flex items-center justify-center text-white font-black text-xl shadow-primary-glow group-hover:scale-110 transition-all border border-white/10">
                ▶
             </button>
          </Card>
