@@ -47,11 +47,14 @@ function Stars({ count }) {
   return <span className="text-yellow-400 text-xs">{"⭐".repeat(count)}</span>;
 }
 
-export default function HomeTab({ onStartSession }) {
+export default function HomeTab({ onStartSession, onOpenProfile }) {
   return (
     <div className="flex flex-col gap-4">
       {/* Profile Card */}
-      <Card>
+      <Card 
+        onClick={onOpenProfile}
+        className="active:scale-[0.98] active:bg-card-raised transition-all cursor-pointer group"
+      >
         <div className="flex items-center gap-3">
           <div className="relative">
             <Avatar initials="M" size="lg" />
@@ -60,12 +63,13 @@ export default function HomeTab({ onStartSession }) {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <h2 className="font-syne font-bold text-lg text-white">Mirkomil</h2>
-              <PremiumBadge />
+              <PremiumBadge size={16} />
             </div>
             <div className="flex items-center gap-1.5 mt-0.5">
-              <span className="text-muted text-xs">📍 Tashkent</span>
+              <span className="text-muted text-xs font-medium tracking-tight">📍 Tashkent</span>
             </div>
           </div>
+          <span className="text-muted text-2xl group-active:translate-x-1 transition-transform">›</span>
         </div>
       </Card>
 

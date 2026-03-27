@@ -10,6 +10,7 @@ import SearchModal from "./components/modals/SearchModal";
 import CallScreen from "./components/modals/CallScreen";
 import PostCallRating from "./components/modals/PostCallRating";
 import PremiumModal from "./components/modals/PremiumModal";
+import ProfileScreen from "./components/modals/ProfileScreen";
 
 const TABS = {
   home:     HomeTab,
@@ -23,8 +24,8 @@ export default function App() {
   const [activeTab,  setActiveTab]  = useState("home");
   const [searching,  setSearching]  = useState(false);
   const [inCall,     setInCall]     = useState(false);
-  const [showRating, setShowRating] = useState(false);
   const [showPremium, setShowPremium] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
 
   const openSearch = () => setSearching(true);
   const cancelSearch = () => setSearching(false);
@@ -52,6 +53,9 @@ export default function App() {
   const openPremium = () => setShowPremium(true);
   const closePremium = () => setShowPremium(false);
 
+  const openProfile = () => setShowProfile(true);
+  const closeProfile = () => setShowProfile(false);
+
   const TabComponent = TABS[activeTab];
 
   return (
@@ -69,6 +73,7 @@ export default function App() {
               onStartSession={() => { setActiveTab("match"); openSearch(); }}
               onFindPartner={openSearch}
               onGetPremium={openPremium}
+              onOpenProfile={openProfile}
             />
           </div>
         </main>
@@ -81,6 +86,7 @@ export default function App() {
         <CallScreen  open={inCall}     onEnd={endCall} />
         <PostCallRating open={showRating} onSubmit={submitRating} onSkip={skipRating} />
         <PremiumModal open={showPremium} onClose={closePremium} />
+        <ProfileScreen open={showProfile} onClose={closeProfile} />
       </div>
     </div>
   );
