@@ -2,10 +2,9 @@ import { useState } from "react";
 import DevBanner from "./components/DevBanner";
 import BottomNav from "./components/BottomNav";
 import HomeTab from "./components/tabs/HomeTab";
-import MatchTab from "./components/tabs/MatchTab";
-import IeltsTab from "./components/tabs/IeltsTab";
-import ProgressTab from "./components/tabs/ProgressTab";
-import RankTab from "./components/tabs/RankTab";
+import PracticeTab from "./components/tabs/PracticeTab";
+import MockTab from "./components/tabs/MockTab";
+import ProfileTab from "./components/tabs/ProfileTab";
 import SearchModal from "./components/modals/SearchModal";
 import CallScreen from "./components/modals/CallScreen";
 import PostCallRating from "./components/modals/PostCallRating";
@@ -14,10 +13,9 @@ import ProfileScreen from "./components/modals/ProfileScreen";
 
 const TABS = {
   home:     HomeTab,
-  match:    MatchTab,
-  ielts:    IeltsTab,
-  progress: ProgressTab,
-  rank:     RankTab,
+  mock:     MockTab,
+  practice: PracticeTab,
+  profile:  ProfileTab,
 };
 
 import OnboardingFlow from "./components/onboarding/OnboardingFlow";
@@ -77,10 +75,10 @@ export default function App() {
         <main className="flex-1 overflow-y-auto overflow-x-hidden hide-scrollbar">
           <div key={activeTab} className="animate-tab-in px-4 pt-4">
             <TabComponent
-              onStartSession={() => { setActiveTab("match"); openSearch(); }}
+              onStartSession={() => { setActiveTab("practice"); openSearch(); }}
               onFindPartner={openSearch}
               onGetPremium={openPremium}
-              onOpenProfile={openProfile}
+              onOpenProfile={() => setActiveTab("profile")}
             />
           </div>
         </main>
