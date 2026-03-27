@@ -237,8 +237,22 @@ export default function MockTab() {
            </Card>
         </div>
 
-        <div className="flex flex-col gap-3 mt-4">
-           <PrimaryButton onClick={() => setScreen("setup")} className="py-5 shadow-primary-glow">Improve My Answers 🔄</PrimaryButton>
+        <div className="flex flex-col gap-4 mt-6">
+           <h3 className="text-muted text-[11px] font-bold uppercase tracking-widest px-1">Recommended Next Step</h3>
+           <Card className="bg-primary-gradient border-none p-6 flex items-center justify-between group active:scale-[0.99] transition-all cursor-pointer">
+              <div className="flex flex-col gap-1">
+                 <span className="text-white/60 text-[10px] font-black uppercase tracking-widest leading-none">AI RECOMMENDATION</span>
+                 <h4 className="text-white font-black text-lg mt-1">Improve My Response ✨</h4>
+                 <p className="text-white/80 text-xs font-medium max-w-[180px]">Rewrite your Part 2 answer to achieve a Band 8.5.</p>
+              </div>
+              <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center text-white font-black text-lg group-hover:scale-110 transition-transform">
+                 GO
+              </div>
+           </Card>
+        </div>
+
+        <div className="flex flex-col gap-3 mt-6">
+           <PrimaryButton onClick={() => setScreen("setup")} className="py-5 shadow-primary-glow">Redo Specific Part 🔄</PrimaryButton>
            <OutlineButton onClick={() => setScreen("setup")}>Return to Dashboard</OutlineButton>
         </div>
       </div>

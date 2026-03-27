@@ -19,8 +19,7 @@ import OnboardingFlow from "./components/onboarding/OnboardingFlow";
 export default function App() {
   const [activeTab,  setActiveTab]  = useState("home");
   const [showPremium, setShowPremium] = useState(false);
-  // Default to true as per previous user request
-  const [onboarded, setOnboarded] = useState(true);
+  const [onboarded, setOnboarded] = useState(false);
 
   const openPremium = () => setShowPremium(true);
   const closePremium = () => setShowPremium(false);
