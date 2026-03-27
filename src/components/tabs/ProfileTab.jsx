@@ -16,6 +16,41 @@ const SETTINGS = [
 ];
 
 export default function ProfileTab({ onGetPremium }) {
+  const [showFullHistory, setShowFullHistory] = useState(false);
+
+  if (showFullHistory) {
+    return (
+      <div className="flex flex-col gap-6 pb-24 animate-tab-in">
+        <div className="flex items-center gap-3">
+           <button onClick={() => setShowFullHistory(false)} className="w-10 h-10 rounded-full bg-card-raised border border-white/5 flex items-center justify-center text-xl">←</button>
+           <h2 className="text-white font-bold text-lg">Mock History</h2>
+        </div>
+
+        <div className="flex flex-col gap-3">
+           <Card className="!p-0 overflow-hidden divide-y divide-subtle">
+              {[...HISTORY, ...HISTORY].map((h, i) => (
+                <div key={i} className="flex items-center justify-between px-5 py-4 active:bg-white/5 transition-colors">
+                   <div className="flex flex-col gap-0.5">
+                      <span className="text-white font-bold text-sm">{h.type}</span>
+                      <span className="text-muted text-[10px]">{h.date}</span>
+                   </div>
+                   <div className="flex items-center gap-3">
+                      <div className="flex flex-col items-end">
+                         <span className="text-white font-black text-lg leading-none">{h.score}</span>
+                         <span className="text-[8px] text-muted font-bold uppercase tracking-tighter mt-1">Band</span>
+                      </div>
+                      <span className={`text-sm ${h.trend === 'up' ? 'text-green' : h.trend === 'down' ? 'text-red' : 'text-slate-500'}`}>
+                         {h.trend === 'up' ? '↗' : h.trend === 'down' ? '↘' : '→'}
+                      </span>
+                   </div>
+                </div>
+              ))}
+           </Card>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-6 pb-24 animate-tab-in">
       <div className="flex flex-col gap-1.5 pt-1">
@@ -81,7 +116,12 @@ export default function ProfileTab({ onGetPremium }) {
       <div className="flex flex-col gap-3">
          <div className="flex items-center justify-between px-1">
             <h3 className="text-muted text-[11px] font-bold uppercase tracking-widest">Mock History</h3>
-            <button className="text-accent text-[10px] font-bold uppercase tracking-widest">View All</button>
+            <button 
+              onClick={() => setShowFullHistory(true)}
+              className="text-accent text-[10px] font-bold uppercase tracking-widest"
+            >
+              View All
+            </button>
          </div>
          <Card className="!p-0 overflow-hidden divide-y divide-subtle">
             {HISTORY.map(h => (
