@@ -93,11 +93,43 @@ export default function HomeTab({ onStartSession, onOpenProfile }) {
         </div>
       </Card>
 
-      {/* PROBLEM 2: HIERARCHY — 4. PRACTICE TOOLS */}
+      {/* ROADMAP / LEARNING PATH (NEW SYSTEM) */}
       <div className="flex flex-col gap-3">
          <div className="flex items-center justify-between px-1">
-            <h3 className="text-muted text-[11px] font-bold uppercase tracking-widest">Practice Tools</h3>
-            <button className="text-accent text-[11px] font-bold uppercase tracking-widest underline">Daily Question</button>
+            <h3 className="text-muted text-[11px] font-bold uppercase tracking-widest leading-none">Your Roadmap</h3>
+            <span className="text-accent text-[9px] font-black uppercase tracking-widest border border-accent/20 px-2.5 py-1 rounded-full bg-accent/5">STEP 2 OF 12</span>
+         </div>
+         <Card className="flex flex-col gap-5 bg-card-raised border-white/5 relative overflow-hidden group">
+            <div className="flex items-center gap-4">
+               <div className="w-14 h-14 bg-accent/10 rounded-2xl flex items-center justify-center text-3xl border border-accent/20 transition-transform group-hover:rotate-12">
+                  🏗️
+               </div>
+               <div className="flex flex-col gap-0.5">
+                  <span className="text-white font-black text-[15px]">Topic: Infrastructure</span>
+                  <p className="text-muted text-[11px] font-medium leading-relaxed">Focus on Lexical resource & Synonyms</p>
+               </div>
+               <div className="ml-auto w-12 h-12 bg-accent rounded-full flex items-center justify-center text-white scale-90 group-hover:scale-100 transition-transform cursor-pointer shadow-primary-glow">
+                  ▶
+               </div>
+            </div>
+            {/* PROGRESS BAR */}
+            <div className="flex flex-col gap-2">
+               <div className="flex justify-between text-[10px] font-black uppercase tracking-widest">
+                  <span className="text-muted">Module Progress</span>
+                  <span className="text-white">65%</span>
+               </div>
+               <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                  <div className="h-full bg-accent rounded-full shadow-[0_0_8px_rgba(79,142,247,0.5)]" style={{ width: "65%" }} />
+               </div>
+            </div>
+         </Card>
+      </div>
+
+      {/* PRACTICE TOOLS */}
+      <div className="flex flex-col gap-3">
+         <div className="flex items-center justify-between px-1">
+            <h3 className="text-muted text-[11px] font-bold uppercase tracking-widest">Mastery Tools</h3>
+            <button className="text-accent text-[11px] font-bold uppercase tracking-widest underline underline-offset-4 decoration-2">Daily Question</button>
          </div>
          <div className="flex gap-3 overflow-x-auto pb-4 hide-scrollbar -mx-4 px-4">
             {PRACTICE_TOOLS.map((c, i) => (
