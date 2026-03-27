@@ -28,7 +28,7 @@ export default function App() {
   const [showPremium, setShowPremium] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   // For now, show onboarding EVERY TIME for testing
-  const [onboarded, setOnboarded] = useState(false);
+  const [onboarded, setOnboarded] = useState(true);
 
   const openSearch = () => setSearching(true);
   const cancelSearch = () => setSearching(false);
