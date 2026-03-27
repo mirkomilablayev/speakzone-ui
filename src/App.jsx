@@ -51,7 +51,11 @@ export default function App() {
         <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
 
         {/* Overlays */}
-        <PremiumModal open={showPremium} onClose={closePremium} />
+        <PremiumModal 
+          open={showPremium} 
+          onClose={closePremium} 
+          reason={activeTab === "mock" ? "Unlock all 20+ IELTS Mocks" : "Elite Features Required"} 
+        />
       </div>
     </div>
   );

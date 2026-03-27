@@ -7,7 +7,7 @@ const BENEFITS = [
   { icon: "📈", title: "Performance Reports", desc: "Track progress and weak areas over time" },
 ];
 
-export default function PremiumModal({ open, onClose }) {
+export default function PremiumModal({ open, onClose, reason }) {
   if (!open) return null;
 
   return (
@@ -28,7 +28,7 @@ export default function PremiumModal({ open, onClose }) {
         {/* Title & Price */}
         <div className="text-center mt-6 mb-8">
            <div className="inline-flex py-1 px-3 bg-accent/10 rounded-full border border-accent/20 mb-3">
-              <span className="text-accent text-[10px] font-black uppercase tracking-widest">KING OF SPEAKING</span>
+              <span className="text-accent text-[10px] font-black uppercase tracking-widest">{reason || "KING OF SPEAKING"}</span>
            </div>
            <h2 className="font-black text-3xl text-white mb-2 leading-tight">Elite Prep for Band 8.5</h2>
            <p className="text-muted text-sm font-medium">Join 5,000+ students mastering IELTS</p>
