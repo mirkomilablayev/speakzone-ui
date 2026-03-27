@@ -1,154 +1,148 @@
 import Card from "../shared/Card";
 import Avatar from "../shared/Avatar";
 import { PremiumBadge } from "../shared/PremiumBadge";
-import { PrimaryButton, OutlineButton } from "../shared/Button";
-import { InviteIcon, StreakDoneIcon } from "../shared/Icons";
-
-const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const FILLED = [true, true, true, true, true, false, false];
-
-const SessionsIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple">
-    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><line x1="12" y1="19" x2="12" y2="22" />
-  </svg>
-);
-
-const ScoreIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-accent">
-    <line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" />
-  </svg>
-);
-
-const MinutesIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-teal">
-    <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
-  </svg>
-);
-
-const RatingIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-orange">
-    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-  </svg>
-);
+import { PrimaryButton } from "../shared/Button";
 
 const STATS = [
-  { Icon: SessionsIcon, value: "24",   label: "Total Sessions"  },
-  { Icon: ScoreIcon,    value: "6.5",  label: "Avg Band Score"  },
-  { Icon: MinutesIcon,  value: "318",  label: "Minutes Spoken"  },
-  { Icon: RatingIcon,   value: "4.8",  label: "Partner Rating"  },
+  { label: "Avg Band", value: "6.5", color: "text-accent" },
+  { label: "Total Mocks", value: "12", color: "text-purple" },
+  { label: "Min Spoken", value: "318", color: "text-green" },
 ];
 
-const FEEDBACKS = [
-  { initials: "A", gradient: "bg-[linear-gradient(135deg,#f97316,#ef4444)]", name: "Asilbek", stars: 5, text: '"Great pronunciation and very fluent speaker!"', date: "Mar 25, 2026" },
-  { initials: "Z", gradient: "bg-[linear-gradient(135deg,#8b5cf6,#ec4899)]", name: "Zulfiya",  stars: 4, text: '"Very helpful, good vocabulary range."',         date: "Mar 23, 2026" },
-  { initials: "D", gradient: "bg-[linear-gradient(135deg,#06b6d4,#3b82f6)]", name: "Davron",   stars: 5, text: '"Excellent session, very engaging discussion!"',  date: "Mar 20, 2026" },
+const GOALS = [
+  { text: "Complete 1 full mock", done: true },
+  { text: "Practice 2 questions", done: false },
 ];
 
-function Stars({ count }) {
-  return <span className="text-yellow-400 text-xs">{"⭐".repeat(count)}</span>;
-}
+const LEARNING_CARDS = [
+  { title: "Improve My Answer", icon: "✨", desc: "Rewrite your last response" },
+  { title: "Vocabulary", icon: "📚", desc: "Topic: Technology" },
+  { title: "Cue Card Gen", icon: "🎴", desc: "Random part 2 topics" },
+];
 
 export default function HomeTab({ onStartSession, onOpenProfile }) {
   return (
-    <div className="flex flex-col gap-4">
-      {/* Profile Card */}
-      <Card 
-        onClick={onOpenProfile}
-        className="active:scale-[0.98] active:bg-card-raised transition-all cursor-pointer group"
-      >
-        <div className="flex items-center gap-3">
+    <div className="flex flex-col gap-6 pb-24">
+      
+      {/* SECTION A — Header */}
+      <div className="flex items-center justify-between pt-2">
+        <div className="flex items-center gap-3" onClick={onOpenProfile}>
           <div className="relative">
-            <Avatar initials="M" size="lg" />
-            <span className="absolute bottom-0.5 right-0.5 w-3 h-3 bg-green rounded-full border-2 border-card shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
+             <Avatar initials="M" size="lg" />
+             <div className="absolute -bottom-1 -right-1">
+                <PremiumBadge size={20} />
+             </div>
           </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <h2 className="font-syne font-bold text-lg text-white">Mirkomil</h2>
-              <PremiumBadge size={16} />
-            </div>
-            <div className="flex items-center gap-1.5 mt-0.5">
-              <span className="text-muted text-xs font-medium tracking-tight">📍 Tashkent</span>
-            </div>
+          <div className="flex flex-col">
+             <h2 className="font-black text-xl text-white leading-none">Mirkomil</h2>
+             <div className="flex items-center gap-1.5 mt-1.5">
+                <span className="text-orange text-xs font-bold flex items-center gap-1">
+                  🔥 5 Day Streak
+                </span>
+             </div>
           </div>
-          <span className="text-muted text-2xl group-active:translate-x-1 transition-transform">›</span>
         </div>
-      </Card>
+        <button className="w-10 h-10 rounded-full bg-card-raised border border-white/5 flex items-center justify-center text-xl">
+           🔔
+        </button>
+      </div>
 
-      {/* Weekly Streak */}
-      <Card>
+      {/* SECTION B — Primary CTA */}
+      <div className="grid grid-cols-1 gap-3">
+        <button 
+          onClick={onStartSession}
+          className="bg-primary-gradient p-6 rounded-2xl flex items-center justify-between group active:scale-[0.98] transition-all shadow-primary-glow border border-white/10"
+        >
+          <div className="flex flex-col items-start text-left">
+             <span className="text-white/80 text-[10px] font-bold uppercase tracking-widest mb-1">Recommended</span>
+             <h3 className="text-white font-black text-2xl">Start Full Mock</h3>
+             <p className="text-white/70 text-xs mt-1">15 mins • Part 1, 2 & 3</p>
+          </div>
+          <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+             ▶
+          </div>
+        </button>
+
+        <button className="bg-card-raised border border-white/5 p-5 rounded-2xl flex items-center justify-between group active:scale-[0.98] transition-all">
+          <div className="flex flex-col items-start text-left">
+             <h3 className="text-white font-bold text-lg">Quick Practice</h3>
+             <p className="text-muted text-xs mt-0.5">Answer 1 random question</p>
+          </div>
+          <div className="w-10 h-10 bg-accent/10 rounded-xl flex items-center justify-center text-xl text-accent group-hover:rotate-12 transition-transform">
+             ⚡
+          </div>
+        </button>
+      </div>
+
+      {/* SECTION C — Today Block */}
+      <Card className="bg-[#1e2130]/40 border-white/5">
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <span className="text-xl">🔥</span>
-            <h3 className="font-syne font-semibold text-white">Weekly Streak</h3>
-          </div>
-          <span className="text-orange text-sm font-bold bg-orange/10 px-3 py-1 rounded-full outline outline-1 outline-orange/20">5 days</span>
+           <h3 className="text-white font-bold text-sm">Today's Goal</h3>
+           <span className="text-accent text-[10px] font-bold uppercase tracking-widest">50% Done</span>
         </div>
-        <div className="flex justify-between gap-1">
-          {DAYS.map((day, i) => (
-            <div key={day} className="flex flex-col items-center gap-1.5 flex-1">
-              <span className="text-[10px] text-muted font-bold uppercase tracking-tighter">{day}</span>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
-                FILLED[i]
-                  ? "bg-primary-gradient text-white shadow-[0_0_12px_rgba(79,142,247,0.5)] scale-110"
-                  : "bg-card-raised border-2 border-subtle text-muted"
-              }`}>
-                {FILLED[i] ? <StreakDoneIcon size={18} /> : ""}
-              </div>
-            </div>
-          ))}
-        </div>
-      </Card>
-
-      {/* Stats 2×2 */}
-      <div className="grid grid-cols-2 gap-3">
-        {STATS.map((s) => (
-          <Card key={s.label} className="flex flex-col items-center text-center py-5 transition-transform active:scale-95">
-            <s.Icon />
-            <span className="font-syne font-bold text-2xl text-white mt-2">{s.value}</span>
-            <span className="text-muted font-medium" style={{ fontSize: 11 }}>{s.label}</span>
-          </Card>
-        ))}
-      </div>
-
-      {/* Partner Feedback */}
-      <Card>
-        <h3 className="font-syne font-semibold text-white mb-4 flex items-center gap-2">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-          </svg>
-          Partner Feedback
-        </h3>
-        <div className="flex flex-col gap-4">
-          {FEEDBACKS.map((fb) => (
-            <div key={fb.name} className="flex gap-3">
-              <div className={`w-9 h-9 ${fb.gradient} rounded-full flex items-center justify-center font-bold text-white text-sm flex-shrink-0`}>
-                {fb.initials}
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="font-semibold text-sm text-white">{fb.name}</span>
-                  <Stars count={fb.stars} />
+        <div className="flex flex-col gap-3">
+           {GOALS.map((g, i) => (
+             <div key={i} className="flex items-center gap-3">
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${g.done ? "bg-accent border-accent" : "border-white/10"}`}>
+                   {g.done && <span className="text-white text-[10px] font-bold">✓</span>}
                 </div>
-                <p className="text-slate-400 text-xs mt-0.5 leading-relaxed">{fb.text}</p>
-                <span className="text-muted text-[10px] mt-1 block font-medium">{fb.date}</span>
-              </div>
-            </div>
-          ))}
+                <span className={`text-sm font-medium ${g.done ? "text-white/40 line-through" : "text-white"}`}>{g.text}</span>
+             </div>
+           ))}
         </div>
       </Card>
 
-      {/* Action Buttons */}
-      <div className="flex flex-col gap-3 pb-2">
-        <OutlineButton id="btn-invite">
-          <div className="flex items-center justify-center gap-2">
-            <InviteIcon size={18} />
-            <span>Invite Friends</span>
-          </div>
-        </OutlineButton>
-        <PrimaryButton id="btn-start-session" onClick={onStartSession}>
-          🎙️ Start Session
-        </PrimaryButton>
+      {/* SECTION D — Stats */}
+      <div className="grid grid-cols-3 gap-2.5">
+         {STATS.map(s => (
+           <Card key={s.label} className="flex flex-col items-center py-4 text-center px-1">
+             <span className={`font-black text-xl ${s.color} leading-none`}>{s.value}</span>
+             <span className="text-muted text-[9px] font-bold uppercase tracking-tighter mt-2">{s.label}</span>
+           </Card>
+         ))}
       </div>
+
+      {/* SECTION E — Continue Learning */}
+      <div className="flex flex-col gap-3">
+         <h3 className="text-muted text-[11px] font-bold uppercase tracking-widest px-1">Continue Learning</h3>
+         <div className="flex gap-3 overflow-x-auto pb-2 hide-scrollbar -mx-4 px-4">
+            {LEARNING_CARDS.map((c, i) => (
+              <div key={i} className="min-w-[160px] bg-card-raised border border-white/5 p-4 rounded-xl2 flex flex-col gap-3 active:scale-95 transition-all">
+                 <span className="text-2xl">{c.icon}</span>
+                 <div className="flex flex-col">
+                    <span className="text-white font-bold text-xs">{c.title}</span>
+                    <span className="text-muted text-[10px] mt-0.5">{c.desc}</span>
+                 </div>
+              </div>
+            ))}
+         </div>
+      </div>
+
+      {/* SECTION F — Last Result */}
+      <div className="flex flex-col gap-3">
+         <h3 className="text-muted text-[11px] font-bold uppercase tracking-widest px-1">Last Result</h3>
+         <Card className="flex flex-col gap-4 bg-card-raised border-white/5">
+            <div className="flex items-center justify-between">
+               <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-accent/10 rounded-xl flex flex-col items-center justify-center">
+                     <span className="text-accent font-black text-xl leading-none">6.5</span>
+                     <span className="text-accent/60 text-[8px] font-bold uppercase tracking-tighter mt-0.5">Band</span>
+                  </div>
+                  <div className="flex flex-col">
+                     <span className="text-white font-bold text-sm">Mock Test #12</span>
+                     <span className="text-muted text-[10px]">Yesterday, 18:45</span>
+                  </div>
+               </div>
+               <button className="text-accent text-[11px] font-bold underline">Analysis</button>
+            </div>
+            <div className="bg-white/5 p-3 rounded-lg">
+               <p className="text-slate-400 text-xs italic leading-relaxed">
+                 "Your fluency has improved! Work on idiomatic expressions in Part 2..."
+               </p>
+            </div>
+         </Card>
+      </div>
+
     </div>
   );
 }
