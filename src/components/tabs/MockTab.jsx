@@ -2,16 +2,14 @@ import { useState, useEffect } from "react";
 import Card from "../shared/Card";
 import { PrimaryButton, OutlineButton } from "../shared/Button";
 
-const UNLOCKED_MOCKS = [
+const MOCK_DATA = [
   { id: 1, title: "IELTS Mock Test #1", duration: "15 min", status: "completed", score: "6.5", isFree: true },
   { id: 2, title: "IELTS Mock Test #2", duration: "15 min", status: "available", score: null, isFree: true },
   { id: 3, title: "IELTS Mock Test #3", duration: "15 min", status: "available", score: null, isFree: true },
-];
-
-const LOCKED_MOCKS = [
-  { id: 4, title: "IELTS Mock Test #4" },
-  { id: 5, title: "IELTS Mock Test #5" },
-  { id: 6, title: "IELTS Mock Test #6" },
+  { id: 4, title: "IELTS Mock Test #4", duration: "15 min", status: "locked",    score: null, isFree: false },
+  { id: 5, title: "IELTS Mock Test #5", duration: "15 min", status: "locked",    score: null, isFree: false },
+  { id: 6, title: "IELTS Mock Test #6", duration: "15 min", status: "locked",    score: null, isFree: false },
+  { id: 7, title: "IELTS Mock Test #7", duration: "15 min", status: "locked",    score: null, isFree: false },
 ];
 
 const SCORES = [
@@ -35,11 +33,17 @@ export default function MockTab({ onGetPremium }) {
     return () => clearInterval(interval);
   }, [isRecording]);
 
-  const handleStart = (mock) => {
-    setSelectedMock(mock);
-    setScreen("flow");
-    setIsRecording(true);
-    setTimer(0);
+  const handleAction = (mock) => {
+    if (mock.status === "locked") {
+      onGetPremium();
+      return;
+    }
+    if (mock.status === "available") {
+      setSelectedMock(mock);
+      setScreen("flow");
+      setIsRecording(true);
+      setTimer(0);
+    }
   };
 
   const handleStop = () => {
@@ -54,28 +58,37 @@ export default function MockTab({ onGetPremium }) {
     return (
       <div className="flex flex-col gap-6 animate-tab-in pb-24">
         <div className="flex flex-col gap-1.5 pt-1">
-          <h1 className="font-bold text-2xl text-white">Your Speaking Tests</h1>
-          <p className="text-muted text-sm px-0.5">Focus on results and improve your band score</p>
+          <div className="flex items-center justify-between">
+             <h1 className="font-bold text-2xl text-white">Your Speaking Tests</h1>
+             <span className="text-accent text-[9px] font-black uppercase tracking-widest border border-accent/20 px-2.5 py-1 rounded-full bg-accent/5">3 free tests</span>
+          </div>
+          <p className="text-muted text-sm px-0.5 opacity-60">Practice results & band score feedback</p>
         </div>
 
-        {/* UNLOCKED TESTS AREA */}
-        <div className="flex flex-col gap-4">
-          {UNLOCKED_MOCKS.map((m) => (
+        {/* UNIFIED TEST LIST (ONE LIST ONLY) */}
+        <div className="flex flex-col gap-3">
+          {MOCK_DATA.map((m) => (
             <Card 
                key={m.id} 
-               onClick={m.status === "available" ? () => handleStart(m) : undefined}
-               className="flex flex-col gap-4 py-6 bg-card-raised border-white/5 hover:bg-white/5 transition-all cursor-pointer group"
+               onClick={() => handleAction(m)}
+               className={`flex flex-col gap-4 py-5 transition-all cursor-pointer group relative overflow-hidden ${
+                 m.status === "locked" ? "opacity-75 bg-card-raised/50 border-white/5 grayscale-[0.3]" : "bg-card-raised border-white/5 active:scale-[0.99]"
+               } ${m.id === 1 ? "border-accent/30 shadow-primary-glow/10 py-6" : ""}`}
             >
               <div className="flex items-center justify-between px-1">
                  <div className="flex flex-col gap-1">
-                    <h3 className="text-white font-black text-lg">{m.title}</h3>
+                    <h3 className={`text-white font-black ${m.id === 1 ? "text-xl" : "text-[16px]"}`}>{m.title}</h3>
                     {m.status === "completed" ? (
                       <div className="flex items-center gap-2">
-                         <span className="text-green text-[10px] font-black uppercase tracking-widest bg-green/10 px-2 py-0.5 rounded">✓ Completed</span>
+                         <span className="text-green text-[9px] font-black uppercase tracking-widest bg-green/10 px-2 py-0.5 rounded">✓ Completed</span>
                          <span className="text-white/40 text-[10px] font-bold">Band Score: {m.score}</span>
                       </div>
+                    ) : m.status === "locked" ? (
+                      <div className="flex items-center gap-1.5">
+                         <span className="text-muted text-[10px] font-bold uppercase tracking-widest">Get full access (PRO)</span>
+                      </div>
                     ) : (
-                      <span className="text-muted text-[11px] font-medium tracking-tight">15 min speaking test</span>
+                      <span className="text-muted text-[10px] font-bold tracking-tight uppercase opacity-60">15 min speaking test</span>
                     )}
                  </div>
                  
@@ -83,8 +96,12 @@ export default function MockTab({ onGetPremium }) {
                     <button className="flex items-center gap-2 bg-white text-accent font-black px-5 py-2.5 rounded-xl text-xs active:scale-95 transition-all shadow-primary-glow group-hover:scale-105">
                        ▶ Start
                     </button>
+                 ) : m.status === "locked" ? (
+                    <button className="flex items-center gap-2 bg-white/5 border border-white/10 text-white/40 font-black px-5 py-2.5 rounded-xl text-xs group-hover:bg-white/10 group-hover:text-white transition-all">
+                       🔒 PRO
+                    </button>
                  ) : (
-                    <div className="w-12 h-12 bg-card-raised border border-white/10 rounded-xl flex items-center justify-center text-white font-black text-xl">
+                    <div className="w-12 h-12 bg-card-raised border border-white/10 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg">
                        {m.score}
                     </div>
                  )}
@@ -92,10 +109,10 @@ export default function MockTab({ onGetPremium }) {
 
               {m.status === "completed" && (
                  <div className="flex gap-2 px-1">
-                    <button className="flex-1 py-2.5 bg-accent/10 border border-accent/20 rounded-xl text-accent text-[10px] font-black uppercase tracking-widest hover:bg-accent/20 transition-all">
+                    <button className="flex-1 py-3 bg-accent/10 border border-accent/20 rounded-xl text-accent text-[10px] font-black uppercase tracking-widest hover:bg-accent/20 transition-all">
                        View Analysis
                     </button>
-                    <button className="flex-1 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all">
+                    <button className="flex-1 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all">
                        Improve Answer
                     </button>
                  </div>
@@ -103,43 +120,6 @@ export default function MockTab({ onGetPremium }) {
             </Card>
           ))}
         </div>
-
-        {/* LOCKED PREVIEW AREA */}
-        <div className="flex flex-col gap-3 opacity-60 mt-2 pointer-events-none">
-           <h3 className="text-muted text-[11px] font-bold uppercase tracking-widest px-1">Locked Tests Preview</h3>
-           {LOCKED_MOCKS.map((m) => (
-              <div key={m.id} className="flex items-center justify-between p-5 bg-card-raised/50 border border-white/5 rounded-2xl blur-[1px]">
-                 <div className="flex items-center gap-3">
-                    <span className="text-xl">🔒</span>
-                    <span className="text-muted font-bold text-sm tracking-tight">{m.title}</span>
-                 </div>
-                 <span className="text-muted text-[10px] font-bold uppercase tracking-widest">Unlock with PRO</span>
-              </div>
-           ))}
-        </div>
-
-        {/* AGGRESSIVE PRO CTA BLOCK */}
-        <Card className="bg-gold-gradient border-none p-8 flex flex-col gap-6 relative overflow-hidden group mt-2" onClick={onGetPremium}>
-           <div className="absolute -right-8 -bottom-8 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-700" />
-           <div className="flex flex-col gap-2 relative z-10 text-center items-center">
-              <h3 className="text-black font-black text-2xl leading-tight">Unlock All Remaining Tests</h3>
-              <div className="flex flex-col gap-2 mt-2">
-                 <div className="flex items-center gap-2 text-black/70 text-[11px] font-black uppercase tracking-widest italic">
-                    <span className="w-1 h-1 bg-black rounded-full" /> Unlimited mock tests
-                 </div>
-                 <div className="flex items-center gap-2 text-black/70 text-[11px] font-black uppercase tracking-widest italic">
-                    <span className="w-1 h-1 bg-black rounded-full" /> Full AI analysis & scoring
-                 </div>
-                 <div className="flex items-center gap-2 text-black/70 text-[11px] font-black uppercase tracking-widest italic">
-                    <span className="w-1 h-1 bg-black rounded-full" /> Faster band score improvement
-                 </div>
-              </div>
-              <button className="mt-8 w-full bg-black text-white font-black px-10 py-5 rounded-2xl text-[14px] uppercase tracking-[0.1em] shadow-xl hover:shadow-black/20 transition-all active:scale-95">
-                 Upgrade to PRO Now 👑
-              </button>
-           </div>
-        </Card>
-
       </div>
     );
   }
