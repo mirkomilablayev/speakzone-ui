@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { PremiumBadge } from "../shared/PremiumBadge";
+import { MicIcon, MicMuteIcon, EndCallIcon } from "../shared/Icons";
 
 const PARTS = [
   { label: "Part 1", sub: "Intro",     color: "text-green-400",  border: "border-green-500/40",  bg: "bg-green-500/10",  glow: "shadow-[0_0_12px_rgba(34,197,94,0.25)]"  },
@@ -128,30 +129,17 @@ export default function CallScreen({ open, onEnd }) {
               : "bg-card-raised border-subtle text-slate-200"
             }`}
         >
-          {muted ? (
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round"
-                d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15zM17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
-            </svg>
-          ) : (
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round"
-                d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 016 0v6a3 3 0 01-3 3z" />
-            </svg>
-          )}
+          {muted ? <MicMuteIcon size={18} /> : <MicIcon size={18} />}
           {muted ? "Unmute" : "Mute"}
         </button>
 
         <button
           onClick={onEnd}
           className="flex-1 flex items-center justify-center gap-2 py-4 rounded-xl2
-            bg-red/90 text-white font-semibold text-sm active:scale-95 transition-all duration-200
+            bg-red text-white font-semibold text-sm active:scale-95 transition-all duration-200
             shadow-[0_4px_20px_rgba(239,68,68,0.3)]"
         >
-          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round"
-              d="M16 8l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M5 3a2 2 0 00-2 2v1c0 8.284 6.716 15 15 15h1a2 2 0 002-2v-3.28a1 1 0 00-.684-.948l-4.493-1.498a1 1 0 00-1.21.502l-1.13 2.257a11.042 11.042 0 01-5.516-5.517l2.257-1.128a1 1 0 00.502-1.21L9.228 3.683A1 1 0 008.279 3H5z" />
-          </svg>
+          <EndCallIcon size={18} />
           End Call
         </button>
       </div>

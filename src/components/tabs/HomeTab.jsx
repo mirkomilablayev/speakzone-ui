@@ -2,7 +2,7 @@ import Card from "../shared/Card";
 import Avatar from "../shared/Avatar";
 import { PremiumBadge } from "../shared/PremiumBadge";
 import { PrimaryButton, OutlineButton } from "../shared/Button";
-import { InviteIcon } from "../shared/Icons";
+import { InviteIcon, StreakDoneIcon } from "../shared/Icons";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const FILLED = [true, true, true, true, true, false, false];
@@ -87,12 +87,12 @@ export default function HomeTab({ onStartSession, onOpenProfile }) {
           {DAYS.map((day, i) => (
             <div key={day} className="flex flex-col items-center gap-1.5 flex-1">
               <span className="text-[10px] text-muted font-bold uppercase tracking-tighter">{day}</span>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all ${
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
                 FILLED[i]
-                  ? "bg-primary-gradient border-accent text-white shadow-[0_0_12px_rgba(79,142,247,0.5)] scale-110"
-                  : "bg-card-raised border-subtle text-muted"
+                  ? "bg-primary-gradient text-white shadow-[0_0_12px_rgba(79,142,247,0.5)] scale-110"
+                  : "bg-card-raised border-2 border-subtle text-muted"
               }`}>
-                {FILLED[i] ? "✓" : ""}
+                {FILLED[i] ? <StreakDoneIcon size={18} /> : ""}
               </div>
             </div>
           ))}
