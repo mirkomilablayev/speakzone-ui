@@ -2,6 +2,7 @@ import Card from "../shared/Card";
 import Avatar from "../shared/Avatar";
 import { PremiumBadge } from "../shared/PremiumBadge";
 import { PrimaryButton, OutlineButton } from "../shared/Button";
+import { InviteIcon } from "../shared/Icons";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const FILLED = [true, true, true, true, true, false, false];
@@ -138,7 +139,12 @@ export default function HomeTab({ onStartSession, onOpenProfile }) {
 
       {/* Action Buttons */}
       <div className="flex flex-col gap-3 pb-2">
-        <OutlineButton id="btn-invite">👥 Invite Friends</OutlineButton>
+        <OutlineButton id="btn-invite">
+          <div className="flex items-center justify-center gap-2">
+            <InviteIcon size={18} />
+            <span>Invite Friends</span>
+          </div>
+        </OutlineButton>
         <PrimaryButton id="btn-start-session" onClick={onStartSession}>
           🎙️ Start Session
         </PrimaryButton>

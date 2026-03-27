@@ -2,6 +2,7 @@ import Card from "../shared/Card";
 import Avatar from "../shared/Avatar";
 import { PremiumBadge } from "../shared/PremiumBadge";
 import { OutlineButton } from "../shared/Button";
+import { InviteIcon } from "../shared/Icons";
 
 const FIELD_ROWS = [
   { icon: "👤", label: "Full Name", value: "Mirkomil Zafarov" },
@@ -114,7 +115,9 @@ export default function ProfileScreen({ open, onClose }) {
               className="w-full flex items-center justify-between p-3.5 rounded-xl hover:bg-white/5 active:scale-[0.99] transition-all"
             >
               <div className="flex items-center gap-3">
-                <span className="text-xl min-w-[24px] text-center">{row.icon}</span>
+                <span className="text-xl min-w-[24px] flex items-center justify-center">
+                  {row.label === "Invite Friends" ? <InviteIcon size={22} className="text-white/80" /> : row.icon}
+                </span>
                 <span className="text-white text-[14px] font-bold">{row.label}</span>
               </div>
               <span className="text-muted text-lg opacity-40">›</span>
