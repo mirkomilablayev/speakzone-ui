@@ -29,7 +29,8 @@ export default function App() {
   const [showRating, setShowRating] = useState(false);
   const [showPremium, setShowPremium] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
-  const [onboarded, setOnboarded] = useState(localStorage.getItem("speakzone_onboarded") === "true");
+  // For now, show onboarding EVERY TIME for testing
+  const [onboarded, setOnboarded] = useState(false);
 
   const openSearch = () => setSearching(true);
   const cancelSearch = () => setSearching(false);
