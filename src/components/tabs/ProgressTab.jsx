@@ -2,38 +2,31 @@ import { useState } from "react";
 import Card from "../shared/Card";
 import { PrimaryButton } from "../shared/Button";
 
-const CRITERIA = [
-  { name: "Fluency",       score: 6.5, pct: 65 },
-  { name: "Lexical",       score: 6.0, pct: 60 },
-  { name: "Grammar",       score: 7.0, pct: 70 },
-  { name: "Pronunciation", score: 6.0, pct: 60 },
-];
-
-// Realistic heat map data (0-4 sessions per day)
+// Populate all 35 cells with realistic data
 const HEATMAP_DATA = [
   0, 1, 0, 0, 2, 0, 1,
   1, 0, 3, 0, 0, 1, 0,
   0, 1, 1, 2, 0, 0, 0,
   0, 0, 1, 0, 4, 1, 0,
-  1, 0, 0, 1, 0, 0, 2
+  1, 0, 0, 1, 0, 3, 2
 ];
 
 const DAY_LABELS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
 function HeatmapSquare({ sessions }) {
-  let bgColor = "bg-[#1a1d27]"; // Visible but dim for 0 sessions
+  let bgColor = "bg-[#1e2130]"; // Visible dark background for empty days
   let shadow = "";
   
   if (sessions === 1) bgColor = "bg-[#1e4d8c]";
   else if (sessions === 2) bgColor = "bg-[#2563eb]";
   else if (sessions >= 3) {
     bgColor = "bg-[#4f8ef7]";
-    shadow = "shadow-[0_0_8px_rgba(79,142,247,0.4)]";
+    shadow = "shadow-[0_0_10px_rgba(79,142,247,0.5)]";
   }
 
   return (
     <div 
-      className={`w-8 h-8 rounded-[4px] border border-black/5 transition-all duration-500 ${bgColor} ${shadow}`}
+      className={`w-9 h-9 rounded-[6px] border border-black/5 transition-all duration-500 ${bgColor} ${shadow}`}
       title={`${sessions} sessions`}
     />
   );
@@ -48,73 +41,50 @@ export default function ProgressTab({ onGetPremium }) {
 
       <div className="relative">
         <div className={`progress-blur flex flex-col gap-4 select-none transition-all duration-500 ${isUnlocked ? "blur-0 opacity-100 filter-none" : "filter blur-[8px] opacity-40 pointer-events-none"}`}>
-          {/* Overall Stats */}
+          
+          {/* SECTION 1 — Refined Stat Cards */}
           <div className="grid grid-cols-2 gap-3">
-            <Card className="flex flex-col items-center py-5">
-              <span className="font-black text-4xl text-accent">6.5</span>
-              <span className="text-muted text-[10px] mt-1 font-bold uppercase tracking-wider">Overall Band</span>
+            <Card className="flex flex-col items-center py-6">
+              <span className="font-black text-4xl text-accent">318</span>
+              <span className="text-muted text-[10px] mt-2 font-bold uppercase tracking-[0.1em]">Hours Spoken</span>
             </Card>
-            <Card className="flex flex-col items-center py-5">
+            <Card className="flex flex-col items-center py-6">
               <span className="font-black text-4xl text-purple">24</span>
-              <span className="text-muted text-[10px] mt-1 font-bold uppercase tracking-wider">Total Sessions</span>
+              <span className="text-muted text-[10px] mt-2 font-bold uppercase tracking-[0.1em]">Total Sessions</span>
             </Card>
           </div>
 
-          {/* Detailed breakdown */}
-          <Card>
-            <h3 className="font-semibold text-white mb-4 text-sm">Detailed Breakdown</h3>
-            <div className="flex flex-col gap-3">
-              {CRITERIA.map((c) => (
-                <div key={c.name} className="flex items-center gap-3">
-                  <span className="text-slate-400 text-[10px] w-20 shrink-0 uppercase font-bold tracking-tight">{c.name}</span>
-                  <div className="flex-1 h-1.5 bg-card-raised rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-primary-gradient rounded-full"
-                      style={{ width: `${c.pct}%` }}
-                    />
-                  </div>
-                  <span className="text-white font-bold text-sm w-7 text-right">{c.score}</span>
-                </div>
-              ))}
+          {/* Activity Heatmap — Precision Engineered */}
+          <Card className="flex flex-col gap-6">
+            <div className="flex items-center justify-between px-1">
+              <h3 className="font-semibold text-white text-sm">Activity Heatmap</h3>
+              <div className="flex items-center gap-3">
+                <button className="text-white/40 hover:text-white transition-colors text-lg">‹</button>
+                <span className="text-[11px] font-bold text-slate-300">March 2026</span>
+                <button className="text-white/40 hover:text-white transition-colors text-lg">›</button>
+              </div>
             </div>
-          </Card>
 
-          {/* Activity Heatmap - Uniform Grid */}
-          <Card className="flex flex-col gap-4">
-            <div className="flex flex-col gap-5">
-               {/* Navigation Header */}
-               <div className="flex items-center justify-between px-1">
-                 <h3 className="font-semibold text-white text-sm">Activity Heatmap</h3>
-                 <div className="flex items-center gap-3">
-                   <button className="text-white/40 hover:text-white transition-colors">‹</button>
-                   <span className="text-[11px] font-bold text-slate-300">March 2026</span>
-                   <button className="text-white/40 hover:text-white transition-colors">›</button>
-                 </div>
+            <div className="flex flex-col gap-3 mx-auto">
+               {/* Day Labels Above — Centered per Column */}
+               <div className="grid grid-cols-7 gap-1">
+                 {DAY_LABELS.map(d => (
+                   <span key={d} className="text-[10px] text-muted/60 font-bold w-9 text-center">{d}</span>
+                 ))}
                </div>
 
-               <div className="flex flex-col gap-2.5 mx-auto">
-                  {/* Day Labels Above */}
-                  <div className="grid grid-cols-7 gap-1">
-                    {DAY_LABELS.map(d => (
-                      <span key={d} className="text-[10px] text-muted/60 font-bold w-8 text-center">{d}</span>
-                    ))}
-                  </div>
-
-                  {/* Grid 7 cols x 5 rows */}
-                  <div className="grid grid-cols-7 gap-1">
-                    {HEATMAP_DATA.map((sessions, i) => (
-                      <HeatmapSquare key={i} sessions={sessions} />
-                    ))}
-                  </div>
+               {/* Grid 7 columns × 5 rows = 35 squares */}
+               <div className="grid grid-cols-7 gap-1">
+                 {HEATMAP_DATA.map((sessions, i) => (
+                   <HeatmapSquare key={i} sessions={sessions} />
+                 ))}
                </div>
             </div>
 
-            {/* Legend Below */}
-            <div className="flex items-center justify-end gap-2 mt-1 px-1">
+            <div className="flex items-center justify-end gap-2 pr-1">
                <span className="text-[10px] text-muted/50 font-medium">Less</span>
                <div className="flex gap-1">
-                  <div className="w-2.5 h-2.5 rounded-[2px] bg-[#1a1d27]" />
-                  <div className="w-2.5 h-2.5 rounded-[2px] bg-[#1e4d8c]" />
+                  <div className="w-2.5 h-2.5 rounded-[2px] bg-[#1e2130]" />
                   <div className="w-2.5 h-2.5 rounded-[2px] bg-[#2563eb]" />
                   <div className="w-2.5 h-2.5 rounded-[2px] bg-[#4f8ef7]" />
                </div>
