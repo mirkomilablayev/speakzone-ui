@@ -351,7 +351,7 @@ export default function OnboardingFlow({ onComplete }) {
   return (
     <div className="fixed inset-0 z-[200] bg-bg flex flex-col overflow-hidden" style={{ maxWidth: 430, margin: "0 auto" }}>
       {step < 7 && (
-        <div className="p-4 flex flex-col gap-3">
+        <div className="p-4 flex flex-col gap-3 relative">
           <div className="flex items-center justify-between h-8 relative">
             <button 
               onClick={prevStep}
@@ -360,7 +360,17 @@ export default function OnboardingFlow({ onComplete }) {
             >
               ←
             </button>
-            <span className="text-muted text-[11px] font-bold uppercase tracking-widest absolute right-0">Step {step} of 6</span>
+            
+            {/* "X" Close Button to skip onboarding */}
+            <button 
+              onClick={handleFinish}
+              className="w-10 h-10 -mr-2 flex items-center justify-center text-white/40 hover:text-white text-2xl active:scale-90 transition-all absolute right-0"
+              title="Skip Onboarding"
+            >
+              ×
+            </button>
+
+            <span className="text-muted text-[11px] font-bold uppercase tracking-widest absolute left-1/2 -translate-x-1/2">Step {step} of 6</span>
           </div>
           
           <div className="w-full h-1 bg-card-raised rounded-full overflow-hidden">
