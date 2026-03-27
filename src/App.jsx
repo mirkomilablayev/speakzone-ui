@@ -24,6 +24,7 @@ export default function App() {
   const [activeTab,  setActiveTab]  = useState("home");
   const [searching,  setSearching]  = useState(false);
   const [inCall,     setInCall]     = useState(false);
+  const [showRating, setShowRating] = useState(false);
   const [showPremium, setShowPremium] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
 
