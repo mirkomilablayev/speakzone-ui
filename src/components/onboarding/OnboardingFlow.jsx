@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Card from "../shared/Card";
 import { PrimaryButton } from "../shared/Button";
+import confetti from "canvas-confetti";
 
 const REGIONS = [
   "Tashkent City", "Tashkent Region", "Samarkand", "Fergana", 
@@ -11,12 +12,16 @@ const REGIONS = [
 
 const SCORES = ["0", "4.0", "4.5", "5.0", "5.5", "6.0", "6.5", "7.0", "7.5", "8.0", "8.5", "9.0"];
 
-import confetti from "canvas-confetti";
+const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 export default function OnboardingFlow({ onComplete }) {
   const [step, setStep] = useState(1);
   const [isAnimating, setIsAnimating] = useState(false);
   
+  // Custom Calendar State
+  const [calMonth, setCalMonth] = useState(new Date().getMonth());
+  const [calYear, setCalYear] = useState(2000);
+
   // Form Data
   const [formData, setFormData] = useState({
     phone: "+998 90 123 45 67",
@@ -25,29 +30,21 @@ export default function OnboardingFlow({ onComplete }) {
     fullName: "Mirkomil Zafarov",
     birthday: "1998-01-15",
     region: "",
-    currentScore: 6, // Index in SCORES
-    targetScore: 9,  // Index in SCORES
+    currentScore: 6, 
+    targetScore: 9, 
   });
 
   const nextStep = () => {
     if (step < 7) {
       if (step === 6) {
-        // Telegram-style "salyut" effect
         const duration = 3 * 1000;
         const animationEnd = Date.now() + duration;
         const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
         const randomInRange = (min, max) => Math.random() * (max - min) + min;
-
         const interval = setInterval(function() {
           const timeLeft = animationEnd - Date.now();
-
-          if (timeLeft <= 0) {
-            return clearInterval(interval);
-          }
-
+          if (timeLeft <= 0) return clearInterval(interval);
           const particleCount = 50 * (timeLeft / duration);
-          // since particles fall down, start a bit higher than random
           confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
           confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
         }, 250);
@@ -70,17 +67,6 @@ export default function OnboardingFlow({ onComplete }) {
     }
   };
 
-  useEffect(() => {
-    if (step === 7) {
-      const timer = setTimeout(() => {
-        // The onComplete is now handled by the button click in case 7
-        // localStorage.setItem("speakzone_onboarded", "true");
-        // onComplete();
-      }, 1500); // Still keep a small delay for animation if needed, but onComplete is manual
-      return () => clearTimeout(timer);
-    }
-  }, [step, onComplete]);
-
   const handleFinish = () => {
     localStorage.setItem("speakzone_onboarded", "true");
     onComplete();
@@ -96,7 +82,7 @@ export default function OnboardingFlow({ onComplete }) {
         return (
           <div className={commonClasses}>
             <div className="flex flex-col items-center text-center gap-6 mt-12">
-              <div className="w-20 h-20 rounded-full bg-primary-gradient flex items-center justify-center font-syne font-black text-white text-3xl shadow-primary-glow border-4 border-white/10">
+              <div className="w-20 h-20 rounded-full bg-primary-gradient flex items-center justify-center font-syne font-black text-white text-3xl shadow-primary-glow border-4 border-white/10 text-center leading-none pt-1">
                 SZ
               </div>
               <div className="flex flex-col gap-3">
@@ -142,7 +128,7 @@ export default function OnboardingFlow({ onComplete }) {
         );
 
       case 3:
-        const isUsernameValid = formData.username.length >= 5; // e.g. @user -> 5 chars
+        const isUsernameValid = formData.username.length >= 5;
         return (
           <div className={commonClasses}>
             <div className="flex flex-col gap-2">
@@ -177,78 +163,88 @@ export default function OnboardingFlow({ onComplete }) {
         );
 
       case 4:
+        const daysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
+        const startDay = new Date(calYear, calMonth, 1).getDay();
+        const days = Array.from({ length: daysInMonth(calMonth, calYear) }, (_, i) => i + 1);
+        
+        const selectedDay = parseInt(formData.birthday.split("-")[2]);
+        const selectedMonth = parseInt(formData.birthday.split("-")[1]) - 1;
+        const selectedYear = parseInt(formData.birthday.split("-")[0]);
+
         return (
           <div className={commonClasses}>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1">
               <span className="text-4xl">👤</span>
               <h2 className="font-syne font-bold text-2xl text-white">Tell Us About You</h2>
             </div>
 
             <div className="flex flex-col gap-4">
-               <div className="flex flex-col gap-1.5 px-1">
-                 <label className="text-[11px] text-muted font-bold uppercase tracking-widest">Full Name</label>
-                 <input 
-                   type="text" 
-                   placeholder="Your full name"
-                   value={formData.fullName}
-                   onChange={e => setFormData({...formData, fullName: e.target.value})}
-                   className="w-full bg-card-raised border border-subtle px-5 py-4 rounded-xl2 text-white placeholder:text-muted focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none transition-all font-medium"
-                 />
-               </div>
-               
-               <div className="flex flex-col gap-2 px-1">
-                 <label className="text-[11px] text-muted font-bold uppercase tracking-widest">Birthday</label>
-                 <div className="grid grid-cols-3 gap-3">
-                   {/* Month */}
-                   <select 
-                     value={formData.birthday.split("-")[1]}
-                     onChange={e => {
-                       const parts = formData.birthday.split("-");
-                       setFormData({...formData, birthday: `${parts[0]}-${e.target.value}-${parts[2]}`});
-                     }}
-                     className="bg-card-raised border border-subtle rounded-xl2 text-white focus:border-accent font-bold outline-none overflow-y-auto"
-                     size="6"
-                   >
-                     {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].map((m, i) => (
-                       <option key={m} value={String(i + 1).padStart(2, '0')} className="py-2">{m}</option>
-                     ))}
-                   </select>
+              <div className="flex flex-col gap-1.5 px-1">
+                <label className="text-[11px] text-muted font-bold uppercase tracking-widest">Full Name</label>
+                <input 
+                  type="text" 
+                  placeholder="Your full name"
+                  value={formData.fullName}
+                  onChange={e => setFormData({...formData, fullName: e.target.value})}
+                  className="w-full bg-card-raised border border-subtle px-5 py-4 rounded-xl2 text-white placeholder:text-muted focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none transition-all font-medium"
+                />
+              </div>
 
-                   {/* Day */}
-                   <select 
-                     value={formData.birthday.split("-")[2]}
-                     onChange={e => {
-                       const parts = formData.birthday.split("-");
-                       setFormData({...formData, birthday: `${parts[0]}-${parts[1]}-${e.target.value}`});
-                     }}
-                     className="bg-card-raised border border-subtle rounded-xl2 text-white focus:border-accent font-bold outline-none overflow-y-auto"
-                     size="6"
-                   >
-                     {Array.from({ length: 31 }, (_, i) => (
-                       <option key={i+1} value={String(i + 1).padStart(2, '0')} className="py-2">{i + 1}</option>
-                     ))}
-                   </select>
-
-                   {/* Year */}
-                   <select 
-                     value={formData.birthday.split("-")[0]}
-                     onChange={e => {
-                       const parts = formData.birthday.split("-");
-                       setFormData({...formData, birthday: `${e.target.value}-${parts[1]}-${parts[2]}`});
-                     }}
-                     className="bg-card-raised border border-subtle rounded-xl2 text-white focus:border-accent font-bold outline-none overflow-y-auto"
-                     size="6"
-                   >
-                     {Array.from({ length: 50 }, (_, i) => (
-                       <option key={2010-i} value={String(2010 - i)} className="py-2">{2010 - i}</option>
-                     ))}
-                   </select>
-                 </div>
-                 <p className="text-[10px] text-muted/60 mt-1 ml-1">Select Month / Day / Year by scrolling</p>
-               </div>
+              <div className="flex flex-col gap-3 px-1">
+                <label className="text-[11px] text-muted font-bold uppercase tracking-widest">Birthday</label>
+                
+                {/* Custom Styled Calendar */}
+                <div className="bg-card-raised border border-subtle rounded-2xl overflow-hidden shadow-xl animate-scale-in">
+                  <div className="bg-white/5 px-4 py-3 flex items-center justify-between border-b border-white/5">
+                    <div className="flex gap-2">
+                      <select 
+                        value={calMonth} 
+                        onChange={e => setCalMonth(parseInt(e.target.value))}
+                        className="bg-transparent text-white font-bold text-sm focus:outline-none cursor-pointer"
+                      >
+                        {MONTH_NAMES.map((m, i) => <option key={m} value={i} className="bg-bg">{m}</option>)}
+                      </select>
+                      <select 
+                        value={calYear} 
+                        onChange={e => setCalYear(parseInt(e.target.value))}
+                        className="bg-transparent text-white font-bold text-sm focus:outline-none cursor-pointer"
+                      >
+                        {Array.from({ length: 110 }, (_, i) => 2024 - i).map(y => <option key={y} value={y} className="bg-bg">{y}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div className="p-3 grid grid-cols-7 gap-1 text-center">
+                    {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map(d => (
+                      <span key={d} className="text-[10px] font-bold text-muted uppercase pb-2">{d}</span>
+                    ))}
+                    {Array(startDay).fill(null).map((_, i) => <div key={`empty-${i}`} />)}
+                    {days.map(d => {
+                      const isSelected = selectedDay === d && selectedMonth === calMonth && selectedYear === calYear;
+                      return (
+                        <button
+                          key={d}
+                          onClick={() => setFormData({...formData, birthday: `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(d).padStart(2,'0')}`})}
+                          className={`w-8 h-8 rounded-lg text-xs font-bold transition-all flex items-center justify-center ${
+                            isSelected 
+                              ? "bg-primary-gradient text-white shadow-primary-glow scale-110 z-10" 
+                              : "text-slate-400 hover:bg-white/5 active:scale-90"
+                          }`}
+                        >
+                          {d}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div className="flex justify-between items-center px-1">
+                  <span className="text-[11px] text-muted">Selected:</span>
+                  <span className="text-sm font-bold text-accent">{formData.birthday}</span>
+                </div>
+              </div>
             </div>
 
-            <div className="mt-8 mb-10">
+            <div className="mt-auto mb-10 pt-2">
                <PrimaryButton onClick={nextStep} disabled={!formData.fullName || !formData.birthday}>Continue →</PrimaryButton>
             </div>
           </div>
@@ -263,19 +259,26 @@ export default function OnboardingFlow({ onComplete }) {
               <p className="text-muted text-sm">Select your region in Uzbekistan</p>
             </div>
 
-            <select 
-              value={formData.region}
-              onChange={e => setFormData({...formData, region: e.target.value})}
-              size="10"
-              className="w-full bg-card-raised border border-subtle rounded-xl2 text-white focus:border-accent font-bold outline-none overflow-y-auto animate-slide-in-up"
-            >
-              <option value="" disabled className="text-muted py-2">Select a region...</option>
-              {REGIONS.map(r => (
-                <option key={r} value={r} className="py-3 px-4">{r}</option>
-              ))}
-            </select>
+            <div className="flex-1 overflow-y-auto pr-1 -mr-1 hide-scrollbar">
+               <div className="flex flex-col gap-2.5">
+                  {REGIONS.map(r => (
+                    <button
+                      key={r}
+                      onClick={() => setFormData({...formData, region: r})}
+                      className={`w-full text-left px-5 py-4 rounded-xl2 border font-bold text-sm transition-all flex items-center justify-between ${
+                        formData.region === r 
+                          ? "bg-primary-gradient border-transparent text-white shadow-primary-glow"
+                          : "bg-card-raised border-subtle text-slate-400 hover:border-subtle/80"
+                      }`}
+                    >
+                      {r}
+                      {formData.region === r && <span className="w-5 h-5 bg-white/20 rounded-full flex items-center justify-center text-[10px]">✓</span>}
+                    </button>
+                  ))}
+               </div>
+            </div>
 
-            <div className="mt-auto mb-10">
+            <div className="mt-4 mb-10">
                <PrimaryButton onClick={nextStep} disabled={!formData.region}>Continue →</PrimaryButton>
             </div>
           </div>
@@ -291,7 +294,6 @@ export default function OnboardingFlow({ onComplete }) {
             </div>
 
             <div className="flex flex-col gap-8 mt-4">
-               {/* Current Score */}
                <div className="flex flex-col gap-4 text-center">
                   <div className="flex flex-col items-center gap-1">
                     <span className="font-syne font-black text-5xl text-accent">{SCORES[formData.currentScore]}</span>
@@ -305,7 +307,6 @@ export default function OnboardingFlow({ onComplete }) {
                   />
                </div>
 
-               {/* Target Score */}
                <div className="flex flex-col gap-4 text-center">
                   <div className="flex flex-col items-center gap-1">
                     <span className="font-syne font-black text-5xl text-purple">{SCORES[formData.targetScore]}</span>
@@ -347,7 +348,6 @@ export default function OnboardingFlow({ onComplete }) {
 
   return (
     <div className="fixed inset-0 z-[200] bg-bg flex flex-col overflow-hidden" style={{ maxWidth: 430, margin: "0 auto" }}>
-      {/* Top Bar */}
       {step < 7 && (
         <div className="p-4 flex flex-col gap-4">
           <div className="flex items-center justify-between h-8 relative">
