@@ -165,14 +165,52 @@ export default function OnboardingFlow({ onComplete }) {
                    className="w-full bg-card-raised border border-subtle px-5 py-4 rounded-xl2 text-white placeholder:text-muted focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none transition-all font-medium"
                  />
                </div>
-               <div className="flex flex-col gap-1.5 px-1">
+               <div className="flex flex-col gap-2 px-1">
                  <label className="text-[11px] text-muted font-bold uppercase tracking-widest">Birthday</label>
-                 <input 
-                   type="date" 
-                   value={formData.birthday}
-                   onChange={e => setFormData({...formData, birthday: e.target.value})}
-                   className="w-full bg-card-raised border border-subtle px-5 py-4 rounded-xl2 text-white placeholder:text-muted focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none transition-all font-medium"
-                 />
+                 <div className="grid grid-cols-3 gap-3">
+                   {/* Month Selector */}
+                   <select 
+                     value={formData.birthday.split("-")[1]}
+                     onChange={e => {
+                       const parts = formData.birthday.split("-");
+                       setFormData({...formData, birthday: `${parts[0]}-${e.target.value}-${parts[2]}`});
+                     }}
+                     className="bg-card-raised border border-subtle px-3 py-4 rounded-xl2 text-white outline-none focus:border-accent appearance-none text-center font-bold"
+                   >
+                     {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].map((m, i) => (
+                       <option key={m} value={String(i + 1).padStart(2, '0')}>{m}</option>
+                     ))}
+                   </select>
+
+                   {/* Day Selector */}
+                   <select 
+                     value={formData.birthday.split("-")[2]}
+                     onChange={e => {
+                       const parts = formData.birthday.split("-");
+                       setFormData({...formData, birthday: `${parts[0]}-${parts[1]}-${e.target.value}`});
+                     }}
+                     className="bg-card-raised border border-subtle px-3 py-4 rounded-xl2 text-white outline-none focus:border-accent appearance-none text-center font-bold"
+                   >
+                     {Array.from({ length: 31 }, (_, i) => (
+                       <option key={i+1} value={String(i + 1).padStart(2, '0')}>{i + 1}</option>
+                     ))}
+                   </select>
+
+                   {/* Year Selector */}
+                   <select 
+                     value={formData.birthday.split("-")[0]}
+                     onChange={e => {
+                       const parts = formData.birthday.split("-");
+                       setFormData({...formData, birthday: `${e.target.value}-${parts[1]}-${parts[2]}`});
+                     }}
+                     className="bg-card-raised border border-subtle px-3 py-4 rounded-xl2 text-white outline-none focus:border-accent appearance-none text-center font-bold"
+                   >
+                     {Array.from({ length: 50 }, (_, i) => (
+                       <option key={2010-i} value={String(2010 - i)}>{2010 - i}</option>
+                     ))}
+                   </select>
+                 </div>
+                 <p className="text-[10px] text-muted/60 mt-1 ml-1">Month / Day / Year</p>
                </div>
             </div>
 
