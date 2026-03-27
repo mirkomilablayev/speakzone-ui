@@ -20,6 +20,8 @@ const TABS = {
   rank:     RankTab,
 };
 
+import OnboardingFlow from "./components/onboarding/OnboardingFlow";
+
 export default function App() {
   const [activeTab,  setActiveTab]  = useState("home");
   const [searching,  setSearching]  = useState(false);
@@ -27,6 +29,7 @@ export default function App() {
   const [showRating, setShowRating] = useState(false);
   const [showPremium, setShowPremium] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [onboarded, setOnboarded] = useState(localStorage.getItem("speakzone_onboarded") === "true");
 
   const openSearch = () => setSearching(true);
   const cancelSearch = () => setSearching(false);
@@ -59,8 +62,13 @@ export default function App() {
 
   const TabComponent = TABS[activeTab];
 
+  if (!onboarded) {
+    return <OnboardingFlow onComplete={() => setOnboarded(true)} />;
+  }
+
   return (
-    <div className="flex items-center justify-center w-full h-dvh bg-black">
+    <div className="flex flex-col h-screen bg-bg text-white overflow-hidden"
+         style={{ maxWidth: 430, margin: "0 auto" }}>
       {/* App shell — 430px max, full dvh */}
       <div className="relative flex flex-col w-full max-w-app h-dvh bg-bg overflow-hidden">
 
