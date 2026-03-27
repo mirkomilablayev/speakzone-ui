@@ -92,15 +92,6 @@ export default function HomeTab({ onStartSession, onOpenProfile }) {
         </div>
       </Card>
 
-      {/* SECTION D — Stats */}
-      <div className="grid grid-cols-3 gap-2.5">
-         {STATS.map(s => (
-           <Card key={s.label} className="flex flex-col items-center py-4 text-center px-1">
-             <span className={`font-black text-xl ${s.color} leading-none`}>{s.value}</span>
-             <span className="text-muted text-[9px] font-bold uppercase tracking-tighter mt-2">{s.label}</span>
-           </Card>
-         ))}
-      </div>
 
       {/* SECTION E — Continue Learning */}
       <div className="flex flex-col gap-3">
