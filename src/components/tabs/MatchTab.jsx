@@ -89,19 +89,6 @@ export default function MatchTab({ onFindPartner }) {
           options={["Beginner", "Intermediate", "Advanced", "Any level"]}
           activeIndex={level}
           onSelect={setLevel}
-        />
-        <FilterGroup
-          label="Band Target"
-          options={["5.0", "6.0", "7.0", "8.0"]}
-          activeIndex={2}
-          onSelect={() => {}}
-          locked
-        />
-        <FilterGroup
-          label="Role"
-          options={["Examiner", "Candidate"]}
-          activeIndex={1}
-          onSelect={() => {}}
           locked
         />
       </Card>
