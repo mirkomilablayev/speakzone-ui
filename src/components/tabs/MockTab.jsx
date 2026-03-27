@@ -109,11 +109,8 @@ export default function MockTab({ onGetPremium }) {
 
               {m.status === "completed" && (
                  <div className="flex gap-2 px-1">
-                    <button className="flex-1 py-3 bg-accent/10 border border-accent/20 rounded-xl text-accent text-[10px] font-black uppercase tracking-widest hover:bg-accent/20 transition-all">
+                    <button className="flex-1 py-3 bg-accent/10 border border-accent/20 rounded-xl text-accent text-[10px] font-black uppercase tracking-widest hover:bg-accent/20 transition-all font-syne">
                        View Analysis
-                    </button>
-                    <button className="flex-1 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all">
-                       Improve Answer
                     </button>
                  </div>
               )}
