@@ -9,6 +9,8 @@ const REGIONS = [
 
 const SCORES = ["0", "4.0", "4.5", "5.0", "5.5", "6.0", "6.5", "7.0", "7.5", "8.0", "8.5", "9.0"];
 
+import confetti from "canvas-confetti";
+
 export default function OnboardingFlow({ onComplete }) {
   const [step, setStep] = useState(1);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -28,6 +30,15 @@ export default function OnboardingFlow({ onComplete }) {
 
   const nextStep = () => {
     if (step < 7) {
+      if (step === 6) {
+        // Trigger confetti when moving to final step
+        confetti({
+          particleCount: 150,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#4f8ef7', '#7b5cf0', '#ffffff']
+        });
+      }
       setIsAnimating(true);
       setTimeout(() => {
         setStep(s => s + 1);
@@ -49,12 +60,18 @@ export default function OnboardingFlow({ onComplete }) {
   useEffect(() => {
     if (step === 7) {
       const timer = setTimeout(() => {
-        localStorage.setItem("speakzone_onboarded", "true");
-        onComplete();
-      }, 1500);
+        // The onComplete is now handled by the button click in case 7
+        // localStorage.setItem("speakzone_onboarded", "true");
+        // onComplete();
+      }, 1500); // Still keep a small delay for animation if needed, but onComplete is manual
       return () => clearTimeout(timer);
     }
   }, [step, onComplete]);
+
+  const handleFinish = () => {
+    localStorage.setItem("speakzone_onboarded", "true");
+    onComplete();
+  };
 
   const progress = (step / 6) * 100;
 
@@ -310,11 +327,14 @@ export default function OnboardingFlow({ onComplete }) {
 
       case 7:
         return (
-          <div className="flex flex-col items-center justify-center text-center gap-6 h-full px-6 animate-pulse">
-            <span className="text-7xl">🎉</span>
+          <div className="flex flex-col items-center justify-center text-center gap-6 h-full px-6">
+            <span className="text-7xl animate-bounce">🎉</span>
             <div className="flex flex-col gap-3">
               <h2 className="font-syne font-bold text-3xl text-white">You're all set, Mirkomil!</h2>
               <p className="text-muted text-lg">Let's start speaking!</p>
+            </div>
+            <div className="mt-12 w-full max-w-[280px]">
+               <PrimaryButton onClick={handleFinish}>Start Now →</PrimaryButton>
             </div>
           </div>
         );
