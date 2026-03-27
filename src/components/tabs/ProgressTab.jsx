@@ -18,10 +18,10 @@ const HEATMAP_DATA = [
   1, 0, 0, 1, 0, 0, 2
 ];
 
-const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const DAY_LABELS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
 function HeatmapSquare({ sessions }) {
-  let bgColor = "bg-[#1e2130]";
+  let bgColor = "bg-[#1a1d27]"; // Visible but dim for 0 sessions
   let shadow = "";
   
   if (sessions === 1) bgColor = "bg-[#1e4d8c]";
@@ -33,7 +33,7 @@ function HeatmapSquare({ sessions }) {
 
   return (
     <div 
-      className={`w-full aspect-square rounded-sm border border-black/10 transition-colors duration-500 ${bgColor} ${shadow}`}
+      className={`w-8 h-8 rounded-[4px] border border-black/5 transition-all duration-500 ${bgColor} ${shadow}`}
       title={`${sessions} sessions`}
     />
   );
@@ -79,39 +79,44 @@ export default function ProgressTab({ onGetPremium }) {
             </div>
           </Card>
 
-          {/* Activity Heatmap - GitHub Style */}
+          {/* Activity Heatmap - Uniform Grid */}
           <Card className="flex flex-col gap-4">
-            <div className="flex items-center justify-between px-1">
-              <h3 className="font-semibold text-white text-sm">Activity Heatmap</h3>
-              <div className="flex items-center gap-4">
-                <button className="text-white/40 hover:text-white transition-colors text-lg">‹</button>
-                <span className="text-xs font-bold text-slate-300">March 2026</span>
-                <button className="text-white/40 hover:text-white transition-colors text-lg">›</button>
-              </div>
-            </div>
+            <div className="flex flex-col gap-5">
+               {/* Navigation Header */}
+               <div className="flex items-center justify-between px-1">
+                 <h3 className="font-semibold text-white text-sm">Activity Heatmap</h3>
+                 <div className="flex items-center gap-3">
+                   <button className="text-white/40 hover:text-white transition-colors">‹</button>
+                   <span className="text-[11px] font-bold text-slate-300">March 2026</span>
+                   <button className="text-white/40 hover:text-white transition-colors">›</button>
+                 </div>
+               </div>
 
-            {/* Grid 5x7 */}
-            <div className="grid grid-cols-7 gap-2">
-              {HEATMAP_DATA.map((sessions, i) => (
-                <HeatmapSquare key={i} sessions={sessions} />
-              ))}
-            </div>
+               <div className="flex flex-col gap-2.5 mx-auto">
+                  {/* Day Labels Above */}
+                  <div className="grid grid-cols-7 gap-1">
+                    {DAY_LABELS.map(d => (
+                      <span key={d} className="text-[10px] text-muted/60 font-bold w-8 text-center">{d}</span>
+                    ))}
+                  </div>
 
-            <div className="flex items-center justify-between mt-1">
-               <div className="flex gap-[9px] px-0.5">
-                  {DAY_LABELS.map(d => (
-                    <span key={d} className="text-[9px] text-muted/60 font-bold uppercase w-full text-center">{d}</span>
-                  ))}
+                  {/* Grid 7 cols x 5 rows */}
+                  <div className="grid grid-cols-7 gap-1">
+                    {HEATMAP_DATA.map((sessions, i) => (
+                      <HeatmapSquare key={i} sessions={sessions} />
+                    ))}
+                  </div>
                </div>
             </div>
 
-            <div className="flex items-center justify-end gap-2 mt-2 px-1">
+            {/* Legend Below */}
+            <div className="flex items-center justify-end gap-2 mt-1 px-1">
                <span className="text-[10px] text-muted/50 font-medium">Less</span>
                <div className="flex gap-1">
-                  <div className="w-2.5 h-2.5 rounded-sm bg-[#1e2130]" />
-                  <div className="w-2.5 h-2.5 rounded-sm bg-[#1e4d8c]" />
-                  <div className="w-2.5 h-2.5 rounded-sm bg-[#2563eb]" />
-                  <div className="w-2.5 h-2.5 rounded-sm bg-[#4f8ef7]" />
+                  <div className="w-2.5 h-2.5 rounded-[2px] bg-[#1a1d27]" />
+                  <div className="w-2.5 h-2.5 rounded-[2px] bg-[#1e4d8c]" />
+                  <div className="w-2.5 h-2.5 rounded-[2px] bg-[#2563eb]" />
+                  <div className="w-2.5 h-2.5 rounded-[2px] bg-[#4f8ef7]" />
                </div>
                <span className="text-[10px] text-muted/50 font-medium">More</span>
             </div>
