@@ -123,6 +123,27 @@ export default function ProfileTab({ onGetPremium }) {
          </Card>
       </div>
 
+
+      <div className="flex flex-col gap-3">
+         <h3 className="text-muted text-[11px] font-bold uppercase tracking-widest px-1 ml-0.5">Support</h3>
+         <Card className="!p-1.5 flex flex-col gap-1.5">
+            <button className="flex items-center justify-between p-4 px-5 rounded-xl hover:bg-white/5 active:scale-[0.99] transition-all bg-card-raised/30 border border-white/5 group">
+               <div className="flex items-center gap-4">
+                  <span className="w-10 h-10 bg-purple/10 rounded-xl flex items-center justify-center text-xl">❓</span>
+                  <span className="text-white text-[14px] font-bold group-hover:text-purple transition-colors">Help Center</span>
+               </div>
+               <span className="text-muted text-lg opacity-40 group-hover:translate-x-1 transition-transform">›</span>
+            </button>
+            <button className="flex items-center justify-between p-4 px-5 rounded-xl hover:bg-white/5 active:scale-[0.99] transition-all bg-card-raised/30 border border-white/5 group">
+               <div className="flex items-center gap-4">
+                  <span className="w-10 h-10 bg-teal/10 rounded-xl flex items-center justify-center text-xl">📝</span>
+                  <span className="text-white text-[14px] font-bold group-hover:text-teal transition-colors">Send Feedback</span>
+               </div>
+               <span className="text-muted text-lg opacity-40 group-hover:translate-x-1 transition-transform">›</span>
+            </button>
+         </Card>
+      </div>
+
       <p className="text-center text-muted text-[11px] font-bold uppercase tracking-[0.2em] mt-2 mb-4 opacity-40">
         SpeakZone v1.2.0
       </p>
