@@ -10,7 +10,7 @@ const SCORES = [
 ];
 
 export default function MockTab() {
-  const [screen, setScreen] = useState("setup"); // setup, flow, prep, evaluating, result
+  const [screen, setScreen] = useState("setup"); 
   const [mode, setMode] = useState("full");
   const [part, setPart] = useState(1);
   const [isRecording, setIsRecording] = useState(false);
@@ -48,45 +48,48 @@ export default function MockTab() {
     return (
       <div className="flex flex-col gap-6 animate-tab-in">
         <div className="flex flex-col gap-1.5 pt-1">
-          <h1 className="font-bold text-2xl text-white">Full Mock Simulation</h1>
-          <p className="text-muted text-sm px-0.5">Experience authentic IELTS Speaking conditions</p>
+          <h1 className="font-bold text-2xl text-white">IELTS Speaking Mock</h1>
+          <p className="text-muted text-sm px-0.5">Real exam simulation with detailed AI scoring</p>
         </div>
 
         <div className="grid grid-cols-1 gap-4">
           <button 
             onClick={() => startFlow("full")}
-            className="bg-primary-gradient p-6 rounded-2xl flex flex-col gap-1 items-start group active:scale-[0.98] transition-all shadow-primary-glow border border-white/10 text-left"
+            className="bg-primary-gradient p-8 rounded-3xl flex flex-col gap-1 items-start group active:scale-[0.98] transition-all shadow-primary-glow border border-white/20 text-left relative overflow-hidden"
           >
-             <span className="text-white font-black text-2xl">Full Mock Test</span>
-             <p className="text-white/70 text-xs">Part 1, 2 & 3 • ~15 mins total</p>
-             <div className="mt-6 bg-white/20 px-5 py-2 rounded-xl text-white font-bold text-xs">Start Full Exam ⚡️</div>
+             <div className="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-125 transition-transform" />
+             <span className="text-white/60 text-[10px] font-black uppercase tracking-widest relative z-10">RECOMMENDED</span>
+             <h3 className="text-white font-black text-2xl mt-1 relative z-10">Start Mock Test</h3>
+             <p className="text-white/80 text-sm mt-1 relative z-10 font-medium">Part 1, 2 & 3 • ~15 mins total</p>
+             <div className="mt-8 bg-white text-accent font-black px-10 py-3 rounded-2xl text-sm relative z-10 shadow-xl group-hover:shadow-white/10 transition-shadow">Start Exam Now ⚡️</div>
           </button>
 
-          <div className="grid grid-cols-1 gap-3">
-             <h3 className="text-muted text-[11px] font-bold uppercase tracking-widest px-1">Or Focus on Part</h3>
+          <div className="grid grid-cols-2 gap-3 mt-1">
+             <Card className="flex flex-col items-center py-5 text-center">
+                <span className="text-muted text-[10px] font-bold uppercase tracking-widest mb-1 opacity-60">Last Score</span>
+                <span className="text-white font-black text-2xl">6.5</span>
+             </Card>
+             <Card className="flex flex-col items-center py-5 text-center">
+                <span className="text-muted text-[10px] font-bold uppercase tracking-widest mb-1 opacity-60">Best Score</span>
+                <span className="text-accent font-black text-2xl">7.0</span>
+             </Card>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 mt-2">
+             <h3 className="text-muted text-[11px] font-bold uppercase tracking-widest px-1">Specific Part Training</h3>
              <div className="grid grid-cols-3 gap-3">
                 {["1", "2", "3"].map(p => (
                   <button 
                     key={p} 
                     onClick={() => startFlow(`part${p}`)}
-                    className="bg-card-raised border border-white/5 py-5 rounded-2xl flex flex-col items-center gap-2 active:scale-95 transition-all text-center"
+                    className="bg-card-raised border border-white/5 py-6 rounded-2xl flex flex-col items-center gap-2 active:scale-95 transition-all text-center group"
                   >
-                    <span className="text-white font-black text-xl">Part {p}</span>
-                    <span className="text-muted text-[10px] font-bold uppercase tracking-tighter opacity-60">Focus</span>
+                    <span className="text-white font-black text-xl group-hover:text-accent transition-colors">Part {p}</span>
+                    <span className="text-muted text-[10px] font-bold uppercase tracking-tighter opacity-60">Mock</span>
                   </button>
                 ))}
              </div>
           </div>
-        </div>
-
-        <div className="mt-4 flex flex-col gap-3">
-           <h3 className="text-muted text-[11px] font-bold uppercase tracking-widest px-1">Tips for Success</h3>
-           <Card className="flex flex-col gap-3 bg-card-raised/40 border-white/5">
-              <div className="flex items-start gap-3">
-                 <span className="text-accent text-lg leading-none mt-0.5">💡</span>
-                 <p className="text-slate-400 text-xs leading-relaxed">Speak naturally and extend your answers. AI will analyze your range of vocabulary.</p>
-              </div>
-           </Card>
         </div>
       </div>
     );
@@ -146,7 +149,7 @@ export default function MockTab() {
            
            <div className="flex flex-col gap-4 px-6">
               <p className="text-white/60 text-sm font-bold uppercase tracking-widest">Question</p>
-              <h2 className="text-white font-bold text-2xl leading-snug">
+              <h2 className="text-white font-black text-2xl leading-snug">
                 “Do you think technology has made our lives easier or more complicated?”
               </h2>
            </div>
@@ -224,16 +227,18 @@ export default function MockTab() {
                  <p className="text-slate-400 text-[13px] leading-relaxed ml-6 italic">"Some hesitation when discussing unfamiliar abstract topics in Part 3."</p>
               </div>
               <div className="flex flex-col gap-2">
-                 <span className="text-accent font-bold text-xs flex items-center gap-2">💡 Improved Answer</span>
-                 <div className="bg-[#4f8ef7]/5 p-4 rounded-xl2 border border-[#4f8ef7]/10 ml-6">
-                    <p className="text-slate-300 text-[13px] leading-relaxed font-medium">Try adding "From my perspective..." or "In my experience..." to bridge thoughts better.</p>
+                 <span className="text-accent font-bold text-xs flex items-center gap-2">💡 Improvements</span>
+                 <div className="bg-[#4f8ef7]/5 p-4 rounded-xl2 border border-[#4f8ef7]/10 ml-6 flex flex-col gap-3">
+                    <p className="text-slate-300 text-[13px] leading-relaxed font-black">Refined Version:</p>
+                    <p className="text-slate-300 text-[13px] opacity-70 leading-relaxed font-medium">"From my perspective, technology is a double-edged sword..."</p>
+                    <button className="text-accent text-xs font-black uppercase tracking-widest underline decoration-2 underline-offset-4 w-fit">Practice This Question Again</button>
                  </div>
               </div>
            </Card>
         </div>
 
         <div className="flex flex-col gap-3 mt-4">
-           <PrimaryButton onClick={() => setScreen("setup")} className="py-4 shadow-primary-glow">Retake Mock Simulation 🔄</PrimaryButton>
+           <PrimaryButton onClick={() => setScreen("setup")} className="py-5 shadow-primary-glow">Improve My Answers 🔄</PrimaryButton>
            <OutlineButton onClick={() => setScreen("setup")}>Return to Dashboard</OutlineButton>
         </div>
       </div>
