@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import Card from "../shared/Card";
 import { PrimaryButton } from "../shared/Button";
 import confetti from "canvas-confetti";
@@ -10,8 +10,53 @@ const REGIONS = [
 ];
 
 const SCORES = ["0", "4.0", "4.5", "5.0", "5.5", "6.0", "6.5", "7.0", "7.5", "8.0", "8.5", "9.0"];
-
 const MONTHS_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const YEARS = Array.from({ length: 60 }, (_, i) => 2015 - i);
+const DAYS = Array.from({ length: 31 }, (_, i) => i + 1);
+
+function ScrollPicker({ items, selected, onSelect, label }) {
+  const containerRef = useRef(null);
+  const itemHeight = 40;
+
+  useEffect(() => {
+    if (containerRef.current) {
+      const index = items.indexOf(selected);
+      containerRef.current.scrollTop = index * itemHeight;
+    }
+  }, [items, selected]);
+
+  const handleScroll = (e) => {
+    const scrollTop = e.target.scrollTop;
+    const index = Math.round(scrollTop / itemHeight);
+    if (items[index] !== undefined && items[index] !== selected) {
+      onSelect(items[index]);
+    }
+  };
+
+  return (
+    <div className="flex flex-col flex-1 items-center gap-1.5 h-[140px] relative">
+      <span className="text-[10px] text-muted font-bold uppercase tracking-widest">{label}</span>
+      <div 
+        ref={containerRef}
+        onScroll={handleScroll}
+        className="w-full h-[120px] overflow-y-scroll snap-y snap-mandatory hide-scrollbar relative z-10 py-[40px]"
+      >
+        {items.map((item, i) => (
+          <div 
+            key={i} 
+            className={`h-[40px] flex items-center justify-center snap-center transition-all duration-200 ${
+              item === selected ? "text-accent text-lg font-black scale-110" : "text-muted/40 text-sm font-medium"
+            }`}
+          >
+            {item}
+          </div>
+        ))}
+      </div>
+      {/* Overlay highlight bars */}
+      <div className="absolute top-[52px] left-2 right-2 h-[38px] bg-white/5 border-y border-white/5 pointer-events-none rounded-sm" />
+    </div>
+  );
+}
 
 export default function OnboardingFlow({ onComplete }) {
   const [step, setStep] = useState(1);
@@ -23,7 +68,7 @@ export default function OnboardingFlow({ onComplete }) {
     agreed: false,
     username: "@mirkomil_speaks",
     fullName: "Mirkomil Zafarov",
-    birthday: "1998-01-15",
+    birthday: { day: 15, month: "Jan", year: 1998 },
     region: "",
     currentScore: 6, 
     targetScore: 9, 
@@ -158,7 +203,6 @@ export default function OnboardingFlow({ onComplete }) {
         );
 
       case 4:
-        const [year, month, day] = formData.birthday.split("-");
         return (
           <div className={commonClasses}>
             <div className="flex flex-col gap-1">
@@ -166,7 +210,7 @@ export default function OnboardingFlow({ onComplete }) {
               <h2 className="font-bold text-2xl text-white">Tell Us About You</h2>
             </div>
 
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-1.5 px-1">
                 <label className="text-[11px] text-muted font-bold uppercase tracking-widest">Full Name</label>
                 <input 
@@ -174,40 +218,24 @@ export default function OnboardingFlow({ onComplete }) {
                   placeholder="Your full name"
                   value={formData.fullName}
                   onChange={e => setFormData({...formData, fullName: e.target.value})}
-                  className="w-full bg-card-raised border border-subtle px-5 py-4 rounded-xl2 text-white placeholder:text-muted focus:border-accent outline-none"
+                  className="w-full bg-card-raised border border-subtle px-5 py-4 rounded-xl2 text-white placeholder:text-muted focus:border-accent outline-none font-medium h-14"
                 />
               </div>
 
-              <div className="flex flex-col gap-1.5 px-1">
-                <label className="text-[11px] text-muted font-bold uppercase tracking-widest">Birthday</label>
-                <div className="grid grid-cols-3 gap-3">
-                  <select 
-                    value={day}
-                    onChange={e => setFormData({...formData, birthday: `${year}-${month}-${e.target.value}`})}
-                    className="flex-1 bg-card-raised border border-subtle h-12 rounded-xl text-white text-sm font-bold focus:border-accent outline-none appearance-none px-3 text-center"
-                  >
-                    {Array.from({ length: 31 }, (_, i) => String(i + 1).padStart(2, '0')).map(d => <option key={d} value={d} className="bg-bg">{d}</option>)}
-                  </select>
-                  <select 
-                    value={month}
-                    onChange={e => setFormData({...formData, birthday: `${year}-${e.target.value}-${day}`})}
-                    className="flex-1 bg-card-raised border border-subtle h-12 rounded-xl text-white text-sm font-bold focus:border-accent outline-none appearance-none px-3 text-center"
-                  >
-                    {MONTHS_SHORT.map((m, i) => <option key={m} value={String(i + 1).padStart(2, '0')} className="bg-bg">{m}</option>)}
-                  </select>
-                  <select 
-                    value={year}
-                    onChange={e => setFormData({...formData, birthday: `${e.target.value}-${month}-${day}`})}
-                    className="flex-1 bg-card-raised border border-subtle h-12 rounded-xl text-white text-sm font-bold focus:border-accent outline-none appearance-none px-3 text-center"
-                  >
-                    {Array.from({ length: 60 }, (_, i) => 2015 - i).map(y => <option key={y} value={String(y)} className="bg-bg">{y}</option>)}
-                  </select>
+              <div className="flex flex-col gap-1.5 px-1 relative">
+                <label className="text-[11px] text-muted font-bold uppercase tracking-widest pl-1">Birthday</label>
+                <div className="bg-card-raised border border-subtle rounded-2xl flex p-2 h-[140px] items-start shadow-xl animate-scale-in">
+                  <ScrollPicker label="Day" items={DAYS} selected={formData.birthday.day} onSelect={(v) => setFormData({...formData, birthday: {...formData.birthday, day: v}})} />
+                  <div className="w-px h-16 bg-white/5 self-center" />
+                  <ScrollPicker label="Month" items={MONTHS_SHORT} selected={formData.birthday.month} onSelect={(v) => setFormData({...formData, birthday: {...formData.birthday, month: v}})} />
+                  <div className="w-px h-16 bg-white/5 self-center" />
+                  <ScrollPicker label="Year" items={YEARS} selected={formData.birthday.year} onSelect={(v) => setFormData({...formData, birthday: {...formData.birthday, year: v}})} />
                 </div>
               </div>
             </div>
 
             <div className="mt-auto mb-10 pt-2">
-               <PrimaryButton onClick={nextStep} disabled={!formData.fullName || !formData.birthday}>Continue →</PrimaryButton>
+               <PrimaryButton onClick={nextStep} disabled={!formData.fullName}>Continue →</PrimaryButton>
             </div>
           </div>
         );
@@ -215,25 +243,25 @@ export default function OnboardingFlow({ onComplete }) {
       case 5:
         return (
           <div className={commonClasses}>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1.5">
               <span className="text-4xl">📍</span>
               <h2 className="font-bold text-2xl text-white">Where Are You From?</h2>
-              <p className="text-muted text-sm">Select your region in Uzbekistan</p>
+              <p className="text-muted text-sm px-0.5">Select your region in Uzbekistan</p>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 mt-1 h-[280px] overflow-y-auto pr-1">
+            <div className="grid grid-cols-2 gap-3 mt-1 pr-1 overflow-y-auto hide-scrollbar" style={{ maxHeight: 240 }}>
               {REGIONS.map(r => (
                 <button
                   key={r}
                   onClick={() => setFormData({...formData, region: r})}
-                  className={`py-3.5 px-4 rounded-xl2 border font-bold text-sm transition-all flex items-center justify-between ${
+                  className={`h-11 px-4 rounded-xl border text-[13px] transition-all flex items-center justify-between active:scale-[0.97] ${
                     formData.region === r 
-                      ? "bg-accent/10 border-accent text-white"
-                      : "bg-card-raised border-subtle text-slate-400"
+                      ? "bg-[#4f8ef7]/15 border-[#4f8ef7] text-white font-bold"
+                      : "bg-[#1e2130] border-white/10 text-slate-400 font-medium"
                   }`}
                 >
                   <span className="truncate">{r}</span>
-                  {formData.region === r && <span className="text-accent text-[10px]">✓</span>}
+                  {formData.region === r && <span className="text-[#4f8ef7] font-bold ml-1.5 text-xs select-none">✓</span>}
                 </button>
               ))}
             </div>
