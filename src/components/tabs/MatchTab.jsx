@@ -15,7 +15,8 @@ function FilterChip({ label, active, disabled, onClick }) {
     <button
       onClick={!disabled ? onClick : undefined}
       disabled={disabled}
-      className={`px-3 py-1.5 rounded-xl text-xs font-medium border transition-all duration-150 ${
+      style={{ fontSize: 13 }}
+      className={`px-2.5 py-1 rounded-lg font-medium border transition-all duration-150 ${
         disabled
           ? "border-subtle text-muted opacity-50 cursor-default"
           : active
@@ -30,12 +31,12 @@ function FilterChip({ label, active, disabled, onClick }) {
 
 function FilterGroup({ label, options, activeIndex, onSelect, locked }) {
   return (
-    <div className="mb-4">
-      <div className="flex items-center gap-2 mb-2">
-        <span className="text-slate-400 text-xs font-medium uppercase tracking-wide">{label}</span>
+    <div className="mb-2.5">
+      <div className="flex items-center gap-2 mb-1.5">
+        <span className="text-slate-500 font-semibold uppercase tracking-wide" style={{ fontSize: 10 }}>{label}</span>
         {locked && <PremiumLockBadge />}
       </div>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-1.5">
         {options.map((opt, i) => (
           <FilterChip
             key={opt}
@@ -45,7 +46,7 @@ function FilterGroup({ label, options, activeIndex, onSelect, locked }) {
             onClick={() => onSelect(i)}
           />
         ))}
-        {locked && <span className="text-base">🔒</span>}
+        {locked && <span className="text-sm">🔒</span>}
       </div>
     </div>
   );
@@ -56,16 +57,16 @@ export default function MatchTab({ onFindPartner }) {
   const [level,  setLevel]    = useState(3); // "Any level"
 
   return (
-    <div className="flex flex-col gap-4">
-      <h1 className="font-syne font-bold text-2xl text-white pt-1">Find a Partner</h1>
+    <div className="flex flex-col gap-3">
+      <h1 className="font-syne font-bold text-xl text-white">Find a Partner</h1>
 
       {/* Free Minutes Bar */}
-      <Card>
-        <div className="flex items-center justify-between mb-2.5">
-          <span className="text-sm text-slate-300 font-medium">⏱️ 20 min/day free</span>
-          <span className="text-accent text-sm font-semibold">14 min remaining</span>
+      <Card padding="px-4 py-3">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-slate-300 font-medium" style={{ fontSize: 13 }}>⏱️ 20 min/day free</span>
+          <span className="text-accent font-semibold" style={{ fontSize: 13 }}>14 min remaining</span>
         </div>
-        <div className="w-full h-2 bg-card-raised rounded-full overflow-hidden">
+        <div className="w-full h-1.5 bg-card-raised rounded-full overflow-hidden">
           <div
             className="h-full bg-primary-gradient rounded-full transition-all duration-500"
             style={{ width: "70%" }}
@@ -74,12 +75,12 @@ export default function MatchTab({ onFindPartner }) {
       </Card>
 
       {/* Filters */}
-      <Card>
-        <h3 className="font-syne font-semibold text-white mb-4">Who would you like to talk with?</h3>
+      <Card padding="px-4 py-3">
+        <h3 className="font-syne font-semibold text-white mb-3" style={{ fontSize: 13 }}>Who would you like to talk with?</h3>
 
         <FilterGroup
           label="Gender"
-          options={["Male", "Female", "Any", "🤖 AI"]}
+          options={["Male", "Female", "Any"]}
           activeIndex={gender}
           onSelect={setGender}
         />
@@ -96,15 +97,13 @@ export default function MatchTab({ onFindPartner }) {
           onSelect={() => {}}
           locked
         />
-        <div className="mb-0">
-          <FilterGroup
-            label="Role"
-            options={["Examiner", "Candidate"]}
-            activeIndex={1}
-            onSelect={() => {}}
-            locked
-          />
-        </div>
+        <FilterGroup
+          label="Role"
+          options={["Examiner", "Candidate"]}
+          activeIndex={1}
+          onSelect={() => {}}
+          locked
+        />
       </Card>
 
       {/* CTA */}
