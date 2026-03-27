@@ -62,60 +62,79 @@ export default function MockTab({ onGetPremium }) {
              <h1 className="font-bold text-2xl text-white">Your Speaking Tests</h1>
              <span className="text-accent text-[9px] font-black uppercase tracking-widest border border-accent/20 px-2.5 py-1 rounded-full bg-accent/5">3 free tests</span>
           </div>
-          <p className="text-muted text-sm px-0.5 opacity-60">Practice results & band score feedback</p>
+          <p className="text-muted text-sm px-0.5 opacity-60 font-medium">Practice results & band score feedback</p>
         </div>
 
         {/* UNIFIED TEST LIST (ONE LIST ONLY) */}
         <div className="flex flex-col gap-3">
-          {MOCK_DATA.map((m) => (
-            <Card 
-               key={m.id} 
-               onClick={() => handleAction(m)}
-               className={`flex flex-col gap-4 py-5 transition-all cursor-pointer group relative overflow-hidden ${
-                 m.status === "locked" ? "opacity-75 bg-card-raised/50 border-white/5 grayscale-[0.3]" : "bg-card-raised border-white/5 active:scale-[0.99]"
-               } ${m.id === 1 ? "border-accent/30 shadow-primary-glow/10 py-6" : ""}`}
-            >
-              <div className="flex items-center justify-between px-1">
-                 <div className="flex flex-col gap-1">
-                    <h3 className={`text-white font-black ${m.id === 1 ? "text-xl" : "text-[16px]"}`}>{m.title}</h3>
-                    {m.status === "completed" ? (
-                      <div className="flex items-center gap-2">
-                         <span className="text-green text-[9px] font-black uppercase tracking-widest bg-green/10 px-2 py-0.5 rounded">✓ Completed</span>
-                         <span className="text-white/40 text-[10px] font-bold">Band Score: {m.score}</span>
-                      </div>
-                    ) : m.status === "locked" ? (
-                      <div className="flex items-center gap-1.5">
-                         <span className="text-muted text-[10px] font-bold uppercase tracking-widest">Get full access (PRO)</span>
-                      </div>
-                    ) : (
-                      <span className="text-muted text-[10px] font-bold tracking-tight uppercase opacity-60">15 min speaking test</span>
-                    )}
-                 </div>
-                 
-                 {m.status === "available" ? (
-                    <button className="flex items-center gap-2 bg-white text-accent font-black px-5 py-2.5 rounded-xl text-xs active:scale-95 transition-all shadow-primary-glow group-hover:scale-105">
-                       ▶ Start
-                    </button>
-                 ) : m.status === "locked" ? (
-                    <button className="flex items-center gap-2 bg-white/5 border border-white/10 text-white/40 font-black px-5 py-2.5 rounded-xl text-xs group-hover:bg-white/10 group-hover:text-white transition-all">
-                       🔒 PRO
-                    </button>
-                 ) : (
-                    <div className="w-12 h-12 bg-card-raised border border-white/10 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg">
-                       {m.score}
-                    </div>
-                 )}
-              </div>
+          {MOCK_DATA.map((m) => {
+            const isCompleted = m.status === "completed";
+            const isAvailable = m.status === "available";
+            const isLocked = m.status === "locked";
 
-              {m.status === "completed" && (
-                 <div className="flex gap-2 px-1">
-                    <button className="flex-1 py-3 bg-accent/10 border border-accent/20 rounded-xl text-accent text-[10px] font-black uppercase tracking-widest hover:bg-accent/20 transition-all font-syne">
-                       View Analysis
-                    </button>
-                 </div>
-              )}
-            </Card>
-          ))}
+            return (
+              <Card 
+                 key={m.id} 
+                 onClick={() => handleAction(m)}
+                 className={`flex flex-col gap-5 py-6 transition-all cursor-pointer group relative overflow-hidden border-y-0 border-r-0 border-l-[4px] ${
+                   isCompleted ? "border-l-green bg-green/5 shadow-[0_4px_24px_rgba(34,197,94,0.05)]" : 
+                   isAvailable ? "border-l-accent bg-card-raised border-white/5 active:scale-[0.99]" : 
+                   "border-l-gold/20 bg-card-raised/30 border-gold/10 opacity-50 blur-[0.5px] scale-[0.98]"
+                 }`}
+              >
+                <div className="flex items-start justify-between px-1">
+                   <div className="flex flex-col gap-1.5">
+                      <h3 className={`text-white font-black tracking-tight ${isCompleted ? "text-xl" : "text-[16px]"}`}>{m.title}</h3>
+                      
+                      {isCompleted ? (
+                        <div className="flex items-center gap-2">
+                           <div className="flex items-center gap-1 bg-green px-2.5 py-1 rounded-full">
+                              <span className="text-white text-[9px] font-black uppercase tracking-widest leading-none">✓ COMPLETED</span>
+                           </div>
+                        </div>
+                      ) : isLocked ? (
+                        <div className="flex items-center gap-1.5">
+                           <span className="text-gold text-[10px] font-black uppercase tracking-widest">Unlock with PRO</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-1 opacity-70">
+                           {[1, 2, 3].map(dot => (
+                             <div key={dot} className="flex items-center gap-1.5">
+                                <div className="w-1.5 h-1.5 rounded-full bg-accent" />
+                                {dot < 3 && <span className="text-white/20 text-[10px] uppercase font-black">·</span>}
+                             </div>
+                           ))}
+                           <span className="text-muted text-[10px] font-bold uppercase tracking-widest ml-1">Part 1·2·3</span>
+                        </div>
+                      )}
+                   </div>
+                   
+                   {isAvailable ? (
+                      <button className="flex items-center gap-2 bg-primary-gradient text-white font-black px-6 py-3 rounded-full text-xs shadow-primary-glow group-hover:scale-105 active:scale-95 transition-all">
+                         ▶ Start
+                      </button>
+                   ) : isLocked ? (
+                      <button className="flex items-center gap-2 bg-gold-gradient text-white font-black px-6 py-3 rounded-full text-xs shadow-gold-glow">
+                         🔒 PRO
+                      </button>
+                   ) : (
+                      <div className="w-14 h-14 bg-primary-gradient rounded-full flex flex-col items-center justify-center text-white font-black shadow-primary-glow border border-white/20">
+                         <span className="text-xl leading-none">{m.score}</span>
+                         <span className="text-[8px] uppercase tracking-tighter opacity-70 -mt-0.5">BAND</span>
+                      </div>
+                   )}
+                </div>
+
+                {isCompleted && (
+                   <div className="flex gap-2 px-1">
+                      <button className="flex-1 py-3.5 bg-primary-gradient rounded-xl text-white text-[11px] font-black uppercase tracking-widest shadow-primary-glow hover:scale-[1.02] active:scale-[0.98] transition-all">
+                         VIEW ANALYSIS
+                      </button>
+                   </div>
+                )}
+              </Card>
+            );
+          })}
         </div>
       </div>
     );
