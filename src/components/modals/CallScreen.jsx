@@ -1,110 +1,157 @@
 import { useEffect, useState, useRef } from "react";
 import { PremiumBadge } from "../shared/PremiumBadge";
 
+const PARTS = [
+  { label: "Part 1", sub: "Intro",     color: "text-green-400",  border: "border-green-500/40",  bg: "bg-green-500/10",  glow: "shadow-[0_0_12px_rgba(34,197,94,0.25)]"  },
+  { label: "Part 2", sub: "Cue Card",  color: "text-accent",     border: "border-accent/40",     bg: "bg-accent/10",     glow: ""  },
+  { label: "Part 3", sub: "Discuss",   color: "text-orange-400", border: "border-orange-400/40", bg: "bg-orange-400/10", glow: ""  },
+];
+
 export default function CallScreen({ open, onEnd }) {
   const [elapsed, setElapsed] = useState(0);
-  const [muted, setMuted] = useState(false);
-  const intervalRef = useRef(null);
+  const [muted,   setMuted]   = useState(false);
+  const [activePart, setActivePart] = useState(0);
+  const timerRef = useRef(null);
 
   useEffect(() => {
     if (open) {
       setElapsed(0);
-      intervalRef.current = setInterval(() => setElapsed((s) => s + 1), 1000);
+      setMuted(false);
+      setActivePart(0);
+      timerRef.current = setInterval(() => setElapsed(s => s + 1), 1000);
     }
-    return () => clearInterval(intervalRef.current);
+    return () => clearInterval(timerRef.current);
   }, [open]);
-
-  const fmt = (s) => {
-    const m = Math.floor(s / 60);
-    const sec = s % 60;
-    return `${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
-  };
 
   if (!open) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex flex-col">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(79,142,247,0.15)_0%,_rgba(13,15,20,0.98)_70%)]" />
+  const fmt = s =>
+    `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 
-      <div className="relative z-10 flex flex-col items-center flex-1 pt-14 pb-10 px-6 gap-6">
-        {/* Partner Avatar with pulse rings */}
+  return (
+    <div className="fixed inset-0 z-50 bg-bg flex flex-col" style={{ maxWidth: 430, margin: "0 auto" }}>
+
+      {/* ── Background radial glow ── */}
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse 60% 35% at 50% 0%, rgba(79,142,247,0.12) 0%, transparent 70%)" }} />
+
+      {/* ── 1. TOP BAR ── */}
+      <div className="relative z-10 flex items-center justify-between px-5 pt-5 pb-3">
+        <span className="text-white/60 text-sm font-medium">
+          {PARTS[activePart].label} · {PARTS[activePart].sub}
+        </span>
+        <span className="font-mono text-accent font-bold text-sm bg-accent/10 px-3 py-1 rounded-full border border-accent/20">
+          {fmt(elapsed)}
+        </span>
+      </div>
+
+      {/* ── 2. CENTER: Avatar + Name ── */}
+      <div className="relative z-10 flex flex-col items-center pt-6 pb-4">
+        {/* Pulse rings */}
         <div className="relative flex items-center justify-center">
-          <div className="absolute w-36 h-36 rounded-full bg-accent/15 pulse-ring" />
-          <div className="absolute w-28 h-28 rounded-full bg-accent/20 pulse-ring-delay" />
-          <div className="w-24 h-24 bg-[linear-gradient(135deg,#f97316,#ef4444)] rounded-full flex items-center justify-center font-bold text-white text-4xl shadow-[0_0_32px_rgba(249,115,22,0.4)]">
+          <div className="absolute w-28 h-28 rounded-full bg-orange-500/10 pulse-ring" />
+          <div className="absolute w-24 h-24 rounded-full bg-orange-500/15 pulse-ring-delay" />
+          {/* Avatar 80px */}
+          <div className="w-20 h-20 rounded-full flex items-center justify-center font-bold text-white text-3xl flex-shrink-0
+            shadow-[0_0_24px_rgba(249,115,22,0.3)]"
+            style={{ background: "linear-gradient(135deg,#f97316,#ef4444)" }}>
             A
           </div>
         </div>
 
-        {/* Partner Info */}
-        <div className="flex flex-col items-center gap-2">
-          <h2 className="font-syne font-bold text-2xl text-white">Asilbek</h2>
-          <div className="flex items-center gap-2 flex-wrap justify-center">
-            <span className="bg-accent/20 border border-accent/30 text-accent text-xs font-semibold px-3 py-1 rounded-full">
-              Upper Intermediate
-            </span>
-            <PremiumBadge />
-          </div>
-          <span className="text-slate-400 text-xs font-medium mt-1 bg-card-raised px-3 py-1 rounded-full border border-subtle">
-            🎙️ Examiner
+        {/* Name */}
+        <h2 className="font-syne font-bold text-white mt-4 mb-2" style={{ fontSize: 20 }}>Asilbek</h2>
+
+        {/* Badges row */}
+        <div className="flex items-center gap-2 flex-wrap justify-center">
+          <span className="bg-accent/15 border border-accent/30 text-accent text-xs font-semibold px-3 py-1 rounded-full">
+            Upper Intermediate
           </span>
+          <PremiumBadge small />
         </div>
 
-        {/* Timer */}
-        <div className="font-syne font-black text-5xl text-accent drop-shadow-[0_0_16px_rgba(79,142,247,0.5)]">
-          {fmt(elapsed)}
+        {/* ── 3. Role badge ── */}
+        <div className="mt-3 bg-card border border-subtle rounded-full px-4 py-1.5 flex items-center gap-1.5">
+          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-slate-400">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+              d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 016 0v6a3 3 0 01-3 3z" />
+          </svg>
+          <span className="text-slate-300 text-xs font-medium">Examiner</span>
         </div>
+      </div>
 
-        {/* Topic Card */}
-        <div className="w-full bg-card card-border rounded-xl2 p-4 text-center">
-          <p className="text-muted text-xs font-medium uppercase tracking-wider mb-1">Today's Topic</p>
+      {/* ── 4. TOPIC CARD ── */}
+      <div className="relative z-10 mx-4">
+        <div className="bg-card card-border rounded-xl2 px-4 py-3 text-center">
+          <p className="text-muted text-[10px] font-semibold uppercase tracking-widest mb-1.5">Today's Topic</p>
           <p className="text-white font-semibold text-sm leading-snug">
             "Do you like visiting museums?"
           </p>
         </div>
+      </div>
 
-        {/* Part Tiles */}
-        <div className="flex gap-2.5 w-full">
-          {/* Part 1 — Active */}
-          <div className="flex-1 bg-green/10 border border-green/40 rounded-xl2 py-3 flex flex-col items-center gap-0.5 shadow-[0_0_12px_rgba(34,197,94,0.2)]">
-            <span className="font-syne font-bold text-green text-sm">Part 1</span>
-            <span className="text-green/70 text-[10px]">Intro</span>
-          </div>
-          {/* Part 2 */}
-          <div className="flex-1 bg-accent/10 border border-accent/30 rounded-xl2 py-3 flex flex-col items-center gap-0.5">
-            <span className="font-syne font-bold text-accent text-sm">Part 2</span>
-            <span className="text-accent/60 text-[10px]">Cue Card</span>
-          </div>
-          {/* Part 3 */}
-          <div className="flex-1 bg-orange/10 border border-orange/30 rounded-xl2 py-3 flex flex-col items-center gap-0.5">
-            <span className="font-syne font-bold text-orange text-sm">Part 3</span>
-            <span className="text-orange/60 text-[10px]">⭐ Discuss</span>
-          </div>
-        </div>
-
-        {/* Controls */}
-        <div className="flex gap-4 mt-auto w-full">
+      {/* ── 5. PART TABS ── */}
+      <div className="relative z-10 flex gap-2 mx-4 mt-3">
+        {PARTS.map((p, i) => (
           <button
-            onClick={() => setMuted((m) => !m)}
-            className={`flex-1 flex flex-col items-center gap-1.5 py-4 rounded-xl2 border transition-all duration-200 active:scale-95 ${
-              muted
-                ? "bg-red/10 border-red/40 text-red"
-                : "bg-card-raised border-subtle text-slate-300"
+            key={p.label}
+            onClick={() => setActivePart(i)}
+            className={`flex-1 flex flex-col items-center py-2.5 rounded-xl border transition-all duration-200
+              ${activePart === i
+                ? `${p.bg} ${p.border} ${p.glow}`
+                : "bg-card-raised border-subtle"
+              }`}
+          >
+            <span className={`font-syne font-bold text-xs ${activePart === i ? p.color : "text-muted"}`}>
+              {p.label}
+            </span>
+            <span className={`text-[10px] mt-0.5 ${activePart === i ? p.color + "/70" : "text-muted/60"}`}>
+              {p.sub}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {/* Spacer */}
+      <div className="flex-1" />
+
+      {/* ── 6. BOTTOM CONTROLS ── */}
+      <div className="relative z-10 flex gap-3 px-4 pb-8 pt-3">
+        <button
+          onClick={() => setMuted(m => !m)}
+          className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-xl2 border font-semibold text-sm
+            transition-all duration-200 active:scale-95
+            ${muted
+              ? "bg-red/10 border-red/40 text-red"
+              : "bg-card-raised border-subtle text-slate-200"
             }`}
-          >
-            <span className="text-xl">{muted ? "🔇" : "🎙️"}</span>
-            <span className="text-xs font-medium">{muted ? "Unmute" : "Mute"}</span>
-          </button>
+        >
+          {muted ? (
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round"
+                d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15zM17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+            </svg>
+          ) : (
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round"
+                d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 016 0v6a3 3 0 01-3 3z" />
+            </svg>
+          )}
+          {muted ? "Unmute" : "Mute"}
+        </button>
 
-          <button
-            onClick={onEnd}
-            className="flex-1 flex flex-col items-center gap-1.5 py-4 rounded-xl2 bg-red/15 border border-red/40 text-red active:scale-95 transition-all duration-200 shadow-[0_0_20px_rgba(239,68,68,0.2)]"
-          >
-            <span className="text-xl">📵</span>
-            <span className="text-xs font-medium">End Call</span>
-          </button>
-        </div>
+        <button
+          onClick={onEnd}
+          className="flex-1 flex items-center justify-center gap-2 py-4 rounded-xl2
+            bg-red/90 text-white font-semibold text-sm active:scale-95 transition-all duration-200
+            shadow-[0_4px_20px_rgba(239,68,68,0.3)]"
+        >
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round"
+              d="M16 8l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M5 3a2 2 0 00-2 2v1c0 8.284 6.716 15 15 15h1a2 2 0 002-2v-3.28a1 1 0 00-.684-.948l-4.493-1.498a1 1 0 00-1.21.502l-1.13 2.257a11.042 11.042 0 01-5.516-5.517l2.257-1.128a1 1 0 00.502-1.21L9.228 3.683A1 1 0 008.279 3H5z" />
+          </svg>
+          End Call
+        </button>
       </div>
     </div>
   );

@@ -5,20 +5,18 @@ export default function DevBanner() {
 
   useEffect(() => {
     try {
-      const tg = window?.Telegram?.WebApp;
-      const data = tg?.initData;
-      setToken(data && data.length > 0 ? data : "No initData (not inside Telegram)");
+      const data = window?.Telegram?.WebApp?.initData ?? "";
+      setToken(data.length > 0 ? data.slice(0, 60) + (data.length > 60 ? "…" : "") : "No initData (not inside Telegram)");
     } catch {
       setToken("Error reading initData");
     }
   }, []);
 
   return (
-    <div className="w-full bg-[#1a1033] border-b border-purple/30 px-3 py-1.5 flex items-start gap-2 z-50">
-      <span className="text-purple font-semibold text-[10px] shrink-0 mt-[1px] font-syne">TG Token:</span>
-      <span className="text-[10px] text-slate-300 break-all leading-tight line-clamp-2 font-mono">
-        {token}
-      </span>
+    <div className="w-full flex items-center gap-2 px-3 flex-shrink-0 overflow-hidden"
+      style={{ height: 28, background: "#12102a", borderBottom: "1px solid rgba(123,92,240,0.25)" }}>
+      <span className="text-purple font-bold shrink-0 font-mono" style={{ fontSize: 9 }}>TG:</span>
+      <span className="text-slate-400 truncate font-mono" style={{ fontSize: 9 }}>{token}</span>
     </div>
   );
 }
