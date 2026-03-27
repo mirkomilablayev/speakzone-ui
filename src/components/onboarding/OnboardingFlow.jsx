@@ -16,7 +16,7 @@ const DAYS = Array.from({ length: 31 }, (_, i) => i + 1);
 
 function ScrollPicker({ items, selected, onSelect, label }) {
   const containerRef = useRef(null);
-  const itemHeight = 40;
+  const itemHeight = 44; // Slightly larger for premium feel
 
   useEffect(() => {
     if (containerRef.current) {
@@ -34,26 +34,30 @@ function ScrollPicker({ items, selected, onSelect, label }) {
   };
 
   return (
-    <div className="flex flex-col flex-1 items-center gap-1.5 h-[140px] relative">
-      <span className="text-[10px] text-muted font-bold uppercase tracking-widest">{label}</span>
-      <div 
-        ref={containerRef}
-        onScroll={handleScroll}
-        className="w-full h-[120px] overflow-y-scroll snap-y snap-mandatory hide-scrollbar relative z-10 py-[40px]"
-      >
-        {items.map((item, i) => (
-          <div 
-            key={i} 
-            className={`h-[40px] flex items-center justify-center snap-center transition-all duration-200 ${
-              item === selected ? "text-accent text-lg font-black scale-110" : "text-muted/40 text-sm font-medium"
-            }`}
-          >
-            {item}
-          </div>
-        ))}
+    <div className="flex flex-col flex-1 items-center gap-2 h-[160px] relative">
+      <span className="text-[10px] text-muted font-bold uppercase tracking-widest opacity-60">{label}</span>
+      <div className="w-full h-[132px] relative overflow-hidden">
+        <div 
+          ref={containerRef}
+          onScroll={handleScroll}
+          className="w-full h-full overflow-y-scroll snap-y snap-mandatory hide-scrollbar relative z-10 py-[44px]"
+        >
+          {items.map((item, i) => (
+            <div 
+              key={i} 
+              className={`h-[44px] flex items-center justify-center snap-center transition-all duration-300 ${
+                item === selected ? "text-white text-2xl font-black scale-100 opacity-100" : "text-slate-500 text-[14px] font-medium opacity-30"
+              }`}
+            >
+              {item}
+            </div>
+          ))}
+        </div>
+        
+        {/* Soft gradient fades at top/bottom */}
+        <div className="absolute top-0 left-0 right-0 h-10 bg-gradient-to-b from-[#161922] to-transparent pointer-events-none z-20" />
+        <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-[#161922] to-transparent pointer-events-none z-20" />
       </div>
-      {/* Overlay highlight bars */}
-      <div className="absolute top-[52px] left-2 right-2 h-[38px] bg-white/5 border-y border-white/5 pointer-events-none rounded-sm" />
     </div>
   );
 }
@@ -210,27 +214,37 @@ export default function OnboardingFlow({ onComplete }) {
               <h2 className="font-bold text-2xl text-white">Tell Us About You</h2>
             </div>
 
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-5">
               <div className="flex flex-col gap-1.5 px-1">
-                <label className="text-[11px] text-muted font-bold uppercase tracking-widest">Full Name</label>
+                <label className="text-[11px] text-muted font-bold uppercase tracking-widest pl-1">Full Name</label>
                 <input 
                   type="text" 
                   placeholder="Your full name"
                   value={formData.fullName}
                   onChange={e => setFormData({...formData, fullName: e.target.value})}
-                  className="w-full bg-card-raised border border-subtle px-5 py-4 rounded-xl2 text-white placeholder:text-muted focus:border-accent outline-none font-medium h-14"
+                  className="w-full bg-[#161922] border border-white/5 px-5 py-4 rounded-xl2 text-white placeholder:text-muted focus:border-accent outline-none font-medium h-14 transition-all"
                 />
               </div>
 
               <div className="flex flex-col gap-1.5 px-1 relative">
                 <label className="text-[11px] text-muted font-bold uppercase tracking-widest pl-1">Birthday</label>
-                <div className="bg-card-raised border border-subtle rounded-2xl flex p-2 h-[140px] items-start shadow-xl animate-scale-in">
+                
+                {/* Premium iOS Scroll Picker Card */}
+                <div className="bg-[#161922] border border-white/5 rounded-2xl flex p-4 h-[180px] items-start relative shadow-2xl animate-scale-in">
+                  
+                  {/* Highlight Band in Center */}
+                  <div className="absolute top-[72px] left-3 right-3 h-[44px] pointer-events-none z-30">
+                     <div className="absolute inset-0 bg-[#4f8ef7]/5 rounded-lg border-y border-[#4f8ef7]/30" />
+                  </div>
+
                   <ScrollPicker label="Day" items={DAYS} selected={formData.birthday.day} onSelect={(v) => setFormData({...formData, birthday: {...formData.birthday, day: v}})} />
-                  <div className="w-px h-16 bg-white/5 self-center" />
+                  <div className="w-px h-10 bg-white/5 self-center mt-6" />
                   <ScrollPicker label="Month" items={MONTHS_SHORT} selected={formData.birthday.month} onSelect={(v) => setFormData({...formData, birthday: {...formData.birthday, month: v}})} />
-                  <div className="w-px h-16 bg-white/5 self-center" />
+                  <div className="w-px h-10 bg-white/5 self-center mt-6" />
                   <ScrollPicker label="Year" items={YEARS} selected={formData.birthday.year} onSelect={(v) => setFormData({...formData, birthday: {...formData.birthday, year: v}})} />
                 </div>
+                
+                <p className="text-[10px] text-muted/40 text-center mt-2 italic px-8">Selected Date: {formData.birthday.day} {formData.birthday.month} {formData.birthday.year}</p>
               </div>
             </div>
 
