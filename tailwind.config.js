@@ -4,8 +4,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        syne: ["'Syne'", "sans-serif"],
-        sans: ["'DM Sans'", "sans-serif"],
+        sans: ["'Inter'", "sans-serif"],
       },
       colors: {
         bg:      "#0d0f14",
