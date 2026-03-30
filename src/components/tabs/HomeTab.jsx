@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useUserStore } from "../../stores/useUserStore";
 
 // Band trend mini chart — 7 day curve
@@ -16,8 +17,15 @@ const AREA = LINE + " L 280,52 L 0,52 Z";
 const hour = new Date().getHours();
 const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
-export default function HomeTab({ onStartSession, onOpenProfile }) {
-  const { name, initial, streak, currentBand } = useUserStore();
+export default function HomeTab({ onStartSession, onOpenProfile, onOpenVocab, onStartSpeak, onGetPremium }) {
+  const { name, initial, streak, currentBand, isPremium } = useUserStore();
+  
+  // Local dismiss states for banners
+  const [showContinue, setShowContinue] = useState(true);
+  const [showUpgrade, setShowUpgrade] = useState(!isPremium);
+  
+  // Hardcoded for demo
+  const vocabDueCount = 12;
 
   return (
     <div className="flex flex-col gap-4 pb-24 animate-tab-in">
@@ -65,12 +73,12 @@ export default function HomeTab({ onStartSession, onOpenProfile }) {
       </div>
 
       {/* ── PRIMARY CTA ── */}
-      <button onClick={onStartSession}
+      <button onClick={onStartSpeak}
         className="w-full bg-teal text-black font-bold py-4 rounded-xl text-[15px] tracking-wide shadow-teal-glow active:scale-[0.98] transition-all flex items-center justify-center gap-2.5">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
           <rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 11c0 3.866 3.134 7 7 7s7-3.134 7-7"/><path d="M12 18v4M9 22h6"/>
         </svg>
-        Start Speaking
+        Practice Random Topic
       </button>
 
       {/* ── SECONDARY CTA ── */}
@@ -79,11 +87,25 @@ export default function HomeTab({ onStartSession, onOpenProfile }) {
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
           <rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/>
         </svg>
-        Start Mock Test
+        Start Full Mock Test
       </button>
 
+      {/* ── CONTINUE BANNER ── */}
+      {showContinue && (
+        <div className="bg-surface rounded-2xl p-4 flex items-center justify-between shadow-sm amber-edge relative animate-fade-in -mt-1">
+          <button onClick={() => setShowContinue(false)} className="absolute top-2 right-2 text-muted p-1 active:scale-90" aria-label="Dismiss">✕</button>
+          <div className="flex flex-col gap-0.5">
+            <span className="text-white font-bold text-[14px]">Resume Mock Test #4</span>
+            <span className="text-amber text-[11px] font-semibold">Part 2 unfinished</span>
+          </div>
+          <button onClick={onStartSession} className="bg-amber/10 text-amber font-bold text-[12px] px-4 py-2 rounded-lg border border-amber/20 active:scale-95 transition-all mr-6">
+            Continue →
+          </button>
+        </div>
+      )}
+
       {/* ── STATS ROW ── */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-3 mt-1">
         <div className="bg-surface rounded-2xl p-4 flex flex-col gap-2">
           <span className="text-amber text-2xl leading-none">🔥</span>
           <span className="text-white font-black text-2xl leading-none">{streak}</span>
@@ -120,6 +142,19 @@ export default function HomeTab({ onStartSession, onOpenProfile }) {
         </svg>
       </div>
 
+      {/* ── VOCAB DUE WIDGET ── */}
+      {vocabDueCount > 0 && (
+        <div className="bg-surface rounded-2xl p-4 flex items-center justify-between shadow-sm amber-edge">
+          <div className="flex flex-col gap-0.5">
+            <span className="text-white font-bold text-[14px]">{vocabDueCount} words due</span>
+            <span className="text-amber text-[11px] font-semibold">Keep your memory fresh</span>
+          </div>
+          <button onClick={onOpenVocab} className="bg-amber/10 text-amber font-bold text-[12px] px-4 py-2 rounded-lg border border-amber/20 active:scale-95 transition-all">
+            Review Now →
+          </button>
+        </div>
+      )}
+
       {/* ── LAST SESSION ── */}
       <div className="bg-surface rounded-2xl p-4 flex items-center gap-3">
         <div className="w-10 h-10 bg-teal/10 rounded-xl flex items-center justify-center shrink-0">
@@ -134,8 +169,31 @@ export default function HomeTab({ onStartSession, onOpenProfile }) {
         <span className="text-muted text-lg leading-none" aria-hidden="true">›</span>
       </div>
 
+      {/* ── UPGRADE BANNER (Free Users) ── */}
+      {showUpgrade && (
+        <div className="bg-surface rounded-2xl p-5 flex flex-col gap-3 shadow-card teal-edge relative mt-2 animate-fade-in">
+          <button onClick={() => setShowUpgrade(false)} className="absolute top-3 right-3 text-muted p-1 active:scale-90" aria-label="Dismiss">✕</button>
+          
+          <div className="flex flex-col pr-6">
+            <span className="text-white font-bold text-[15px] mb-1">Upgrade to SpeakZone PRO</span>
+            <div className="flex items-center gap-2">
+              <span className="text-muted text-[12px] font-bold uppercase tracking-widest">Sessions Used Today:</span>
+              <span className="text-teal font-black text-[13px]">1 / 1</span>
+            </div>
+            <div className="w-full h-1.5 bg-hint rounded-full overflow-hidden mt-1.5 mb-2">
+              <div className="h-full bg-teal rounded-full w-full" />
+            </div>
+            <p className="text-white/70 text-[12px] leading-snug">Unlock unlimited speaking practice and AI analytics.</p>
+          </div>
+
+          <button onClick={onGetPremium} className="w-full bg-teal text-black font-bold py-3.5 rounded-xl text-[14px] shadow-teal-glow active:scale-[0.98] transition-all relative z-10 mt-1">
+            Upgrade Now
+          </button>
+        </div>
+      )}
+
       {/* ── SOCIAL PROOF ── */}
-      <p className="text-center text-hint text-[11px] font-medium pb-2">
+      <p className="text-center text-hint text-[11px] font-medium pb-4 mt-2">
         2,400 students improving their IELTS speaking.
       </p>
 

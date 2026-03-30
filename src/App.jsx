@@ -2,27 +2,28 @@ import { useState, useEffect } from "react";
 import "./i18n";
 import { useUserStore } from "./stores/useUserStore";
 import { useTelegram } from "./hooks/useTelegram";
-import DevBanner from "./components/DevBanner";
 import BottomNav from "./components/BottomNav";
 import HomeTab from "./components/tabs/HomeTab";
-import PracticeTab from "./components/tabs/PracticeTab";
 import MockTab from "./components/tabs/MockTab";
+import SpeakTab from "./components/tabs/SpeakTab";
+import VocabTab from "./components/tabs/VocabTab";
 import ProfileTab from "./components/tabs/ProfileTab";
 import PremiumModal from "./components/modals/PremiumModal";
 import OnboardingFlow from "./components/onboarding/OnboardingFlow";
 import ErrorBoundary from "./components/shared/ErrorBoundary";
 
 const TABS = {
-  home:     HomeTab,
-  mock:     MockTab,
-  practice: PracticeTab,
-  profile:  ProfileTab,
+  home:    HomeTab,
+  mock:    MockTab,
+  speak:   SpeakTab,
+  vocab:   VocabTab,
+  profile: ProfileTab,
 };
 
 const TG = typeof window !== "undefined" ? window.Telegram?.WebApp : null;
 
 export default function App() {
-  const [activeTab, setActiveTab]   = useState("home");
+  const [activeTab, setActiveTab] = useState("home");
   const [showPremium, setShowPremium] = useState(false);
 
   const { onboarded, setOnboarded } = useUserStore();
@@ -53,6 +54,8 @@ export default function App() {
             <ErrorBoundary>
               <TabComponent
                 onStartSession={() => setActiveTab("mock")}
+                onStartSpeak={() => setActiveTab("speak")}
+                onOpenVocab={() => setActiveTab("vocab")}
                 onGetPremium={openPremium}
                 onOpenProfile={() => setActiveTab("profile")}
               />
@@ -64,11 +67,7 @@ export default function App() {
         <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
 
         {/* Overlays */}
-        <PremiumModal
-          open={showPremium}
-          onClose={closePremium}
-          reason={activeTab === "mock" ? "Unlock all 20+ IELTS Mocks" : "Elite Features Required"}
-        />
+        <PremiumModal open={showPremium} onClose={closePremium} />
       </div>
     </div>
   );

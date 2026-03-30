@@ -3,10 +3,23 @@ import { useTranslation } from "react-i18next";
 import { useUserStore } from "../../stores/useUserStore";
 import i18n from "../../i18n";
 
+// Profile band chart pts (shows more data than Home tab)
+const CHART_PTS = [
+  { d:"Jan 12", x:0,   y:42, score:"6.0", type:"S" },
+  { d:"Jan 15", x:46,  y:42, score:"6.0", type:"M" },
+  { d:"Jan 22", x:93,  y:30, score:"6.5", type:"S" },
+  { d:"Feb 05", x:140, y:28, score:"6.5", type:"M" },
+  { d:"Feb 18", x:186, y:18, score:"7.0", type:"S" },
+  { d:"Mar 10", x:233, y:12, score:"7.0", type:"S" },
+  { d:"Mar 26", x:280, y:6,  score:"7.5", type:"M" },
+];
+const LINE = "M 0,42 C 23,42 23,42 46,42 C 70,42 70,30 93,30 C 117,30 117,28 140,28 C 163,28 163,18 186,18 C 210,18 210,12 233,12 C 256,12 256,6 280,6";
+const AREA = LINE + " L 280,52 L 0,52 Z";
+
 const HISTORY = [
-  { id: 1, type: "Full Mock",    date: "Mar 26", score: "7.5", dur: "14m" },
-  { id: 2, type: "Part 2 Focus", date: "Mar 25", score: "6.5", dur: "4m" },
-  { id: 3, type: "Part 1 Mock",  date: "Mar 22", score: "6.0", dur: "6m" },
+  { id: 1, type: "Full Mock Test", date: "Mar 26", score: "7.5", dur: "14m" },
+  { id: 2, type: "Random Topic",   date: "Mar 25", score: "6.5", dur: "4m" },
+  { id: 3, type: "Random Topic",   date: "Mar 22", score: "6.0", dur: "6m" },
 ];
 
 const METRICS = [
@@ -51,7 +64,33 @@ export default function ProfileTab({ onGetPremium }) {
         ))}
       </div>
 
+      {/* ── PROFILE BAND SCORE CHART ── */}
+      <div className="bg-surface rounded-2xl p-5 flex flex-col gap-2 mt-2">
+        <div className="flex items-baseline justify-between">
+          <span className="text-white font-semibold text-[14px]">Performance History</span>
+          {!isPremium && <span className="text-amber text-[10px] font-bold uppercase tracking-widest">Last 7 <span className="opacity-50">(PRO: 30)</span></span>}
+        </div>
+        <svg viewBox="0 0 280 80" className="w-full h-20 overflow-visible mt-2">
+          <defs>
+            <linearGradient id="profileTealFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#00c9b1" stopOpacity="0.35"/>
+              <stop offset="100%" stopColor="#00c9b1" stopOpacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d={AREA} fill="url(#profileTealFill)"/>
+          <path d={LINE} fill="none" stroke="#00c9b1" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+          {CHART_PTS.map(({ x, y, score, type }) => (
+            <g key={x}>
+              <circle cx={x} cy={y} r="4" fill="#070b13" stroke="#00c9b1" strokeWidth="2.5"/>
+              <text x={x} y={y - 10} textAnchor="middle" fill="#dce8f5" fontSize="10" fontFamily="Space Grotesk" fontWeight="bold">{score}</text>
+              <text x={x} y="64" textAnchor="middle" fill={type === "S" ? "#f59e0b" : "#00c9b1"} fontSize="10" fontFamily="Space Grotesk" fontWeight="bold">{type}</text>
+            </g>
+          ))}
+        </svg>
+      </div>
+
       {/* ── UPGRADE BANNER (Free Users Only) ── */}
+      {/* Fix 7: Show Monthly base price */}
       {!isPremium && (
         <div className="bg-elevated rounded-2xl p-6 flex flex-col gap-5 mt-2 shadow-card teal-edge relative">
           <div className="absolute top-0 right-0 w-48 h-48 bg-teal/5 blur-3xl rounded-full pointer-events-none" />
@@ -65,8 +104,9 @@ export default function ProfileTab({ onGetPremium }) {
               </ul>
             </div>
             <div className="flex flex-col items-end gap-1">
-              <span className="text-muted text-[10px] font-bold uppercase tracking-widest line-through">1,188,000 UZS</span>
-              <span className="text-white font-black text-[18px] leading-none">790K <span className="text-sm font-medium">UZS/yr</span></span>
+              <span className="text-muted text-[10px] font-bold uppercase tracking-widest line-through">199K UZS</span>
+              <span className="text-white font-black text-[18px] leading-none">99K <span className="text-sm font-medium">UZS/mo</span></span>
+              <span className="text-amber text-[9px] font-bold uppercase tracking-widest mt-0.5">Or save 20% yearly</span>
             </div>
           </div>
           <button onClick={onGetPremium} className="w-full bg-teal text-black font-bold py-3.5 rounded-xl text-[14px] shadow-teal-glow active:scale-[0.98] transition-all relative z-10">
@@ -80,10 +120,14 @@ export default function ProfileTab({ onGetPremium }) {
         <h3 className="text-muted text-[11px] font-bold uppercase tracking-widest px-1">My Sessions</h3>
         <div className="flex flex-col gap-2">
           {HISTORY.map(h => (
-            <div key={h.id} className="bg-surface rounded-xl p-4 flex items-center justify-between active:scale-[0.98] transition-all cursor-pointer">
+            <button key={h.id} className="w-full text-left bg-surface rounded-xl p-4 flex items-center justify-between active:scale-[0.98] transition-all cursor-pointer">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-elevated rounded-lg flex items-center justify-center text-teal shadow-inner shrink-0">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 11c0 3.866 3.134 7 7 7s7-3.134 7-7"/></svg>
+                  {h.type === "Full Mock Test" ? (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>
+                  ) : (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 11c0 3.866 3.134 7 7 7s7-3.134 7-7"/></svg>
+                  )}
                 </div>
                 <div className="flex flex-col gap-0.5">
                   <span className="text-white font-bold text-[14px] leading-tight tracking-tight">{h.type}</span>
@@ -97,7 +141,7 @@ export default function ProfileTab({ onGetPremium }) {
                 </div>
                 <span className="text-muted opacity-30 text-lg leading-none shrink-0" aria-hidden="true">›</span>
               </div>
-            </div>
+            </button>
           ))}
         </div>
       </div>

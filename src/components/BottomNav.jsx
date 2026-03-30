@@ -1,10 +1,16 @@
 import { useTelegram } from "../hooks/useTelegram";
-import { useTranslation } from "react-i18next";
 
 const HomeIcon = ({ active }) => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
     <path d="M3 12L12 4L21 12" stroke="currentColor" strokeWidth={active ? 2 : 1.5} strokeLinecap="round" strokeLinejoin="round"/>
     <path d="M5 10V19C5 19.6 5.4 20 6 20H9V15H15V20H18C18.6 20 19 19.6 19 19V10" stroke="currentColor" strokeWidth={active ? 2 : 1.5} strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+const MockIcon = ({ active }) => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <rect x="4" y="2" width="16" height="20" rx="2" stroke="currentColor" strokeWidth={active ? 2 : 1.5}/>
+    <path d="M8 7h8M8 11h8M8 15h5" stroke="currentColor" strokeWidth={active ? 2 : 1.5} strokeLinecap="round"/>
   </svg>
 );
 
@@ -16,10 +22,10 @@ const SpeakIcon = ({ active }) => (
   </svg>
 );
 
-const MockIcon = ({ active }) => (
+const VocabIcon = ({ active }) => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-    <rect x="4" y="2" width="16" height="20" rx="2" stroke="currentColor" strokeWidth={active ? 2 : 1.5}/>
-    <path d="M8 7H16M8 11H16M8 15H12" stroke="currentColor" strokeWidth={active ? 2 : 1.5} strokeLinecap="round"/>
+    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" strokeWidth={active ? 2 : 1.5} strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke="currentColor" strokeWidth={active ? 2 : 1.5} strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 
@@ -31,17 +37,18 @@ const ProfileIcon = ({ active }) => (
 );
 
 const TABS = [
-  { id: "home",     label: "Home",    Icon: HomeIcon    },
-  { id: "mock",     label: "Mock",    Icon: MockIcon    },
-  { id: "practice", label: "Speak",   Icon: SpeakIcon   },
-  { id: "profile",  label: "Profile", Icon: ProfileIcon },
+  { id: "home",    label: "Home",    Icon: HomeIcon    },
+  { id: "mock",    label: "Mock",    Icon: MockIcon    },
+  { id: "speak",   label: "Speak",   Icon: SpeakIcon   },
+  { id: "vocab",   label: "Vocab",   Icon: VocabIcon   },
+  { id: "profile", label: "Profile", Icon: ProfileIcon },
 ];
 
 export default function BottomNav({ activeTab, onTabChange }) {
   const { hapticFeedback } = useTelegram();
 
   return (
-    <nav className="glass-nav flex-shrink-0 flex items-center justify-around" style={{ height: 64 }}
+    <nav className="glass-nav flex-shrink-0 flex items-center justify-around px-1" style={{ height: 64 }}
          role="tablist" aria-label="Main navigation">
       {TABS.map(({ id, label, Icon }) => {
         const isActive = activeTab === id;
@@ -54,7 +61,7 @@ export default function BottomNav({ activeTab, onTabChange }) {
             aria-label={label}
             aria-current={isActive ? "page" : undefined}
             onClick={() => { hapticFeedback("light"); onTabChange(id); }}
-            className={`flex flex-col items-center justify-center gap-1.5 flex-1 h-full transition-all duration-200 ${isActive ? "text-teal" : "text-muted"}`}
+            className={`flex flex-col items-center justify-center gap-[3px] flex-1 h-full transition-all duration-200 ${isActive ? "text-teal" : "text-muted"}`}
           >
             <div className={`p-1.5 rounded-xl transition-all ${isActive ? "bg-teal/10" : ""}`}>
               <Icon active={isActive} />

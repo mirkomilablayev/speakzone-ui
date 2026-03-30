@@ -161,20 +161,35 @@ export default function MockTab({ onGetPremium }) {
     </div>
   );
 
-  /* ── RESULT ── */
+  /* ── RESULT (Fix 5 complete redesign) ── */
   if (screen === "result") return (
-    <div className="flex flex-col gap-5 animate-tab-in pb-20">
-      {/* Overall score */}
-      <div className="flex flex-col items-center gap-2 pt-4">
-        <div className="w-24 h-24 rounded-3xl bg-elevated border-2 border-teal/30 flex flex-col items-center justify-center shadow-teal-glow">
-          <span className="text-teal font-black text-4xl leading-none">7.5</span>
-          <span className="text-muted text-[10px] font-semibold uppercase tracking-wider mt-1">Overall</span>
+    <div className="flex flex-col gap-6 animate-tab-in pb-20 pt-2">
+      
+      {/* Overall score badge */}
+      <div className="flex flex-col items-center gap-2 pt-2">
+        <div className="w-28 h-28 rounded-3xl bg-elevated border-2 border-teal/30 flex flex-col items-center justify-center shadow-teal-glow">
+          <span className="text-teal font-black text-[42px] leading-none">7.5</span>
+          <span className="text-muted text-[11px] font-bold uppercase tracking-wider mt-1">Overall Band</span>
         </div>
-        <h2 className="text-white font-black text-2xl mt-2">Mock Complete!</h2>
-        <p className="text-muted text-sm text-center px-6">Great performance — you're improving fast.</p>
       </div>
 
-      {/* Criteria grid */}
+      {/* 3 Part Sub-scores */}
+      <div className="grid grid-cols-3 gap-2">
+        <div className="bg-surface rounded-xl p-3 flex flex-col items-center justify-center gap-1 border border-white/5">
+          <span className="text-muted text-[10px] font-bold uppercase tracking-widest">Part 1</span>
+          <span className="text-white font-black text-xl">7.0</span>
+        </div>
+        <div className="bg-surface rounded-xl p-3 flex flex-col items-center justify-center gap-1 border border-white/5">
+          <span className="text-muted text-[10px] font-bold uppercase tracking-widest">Part 2</span>
+          <span className="text-white font-black text-xl">8.0</span>
+        </div>
+        <div className="bg-surface rounded-xl p-3 flex flex-col items-center justify-center gap-1 border border-white/5">
+          <span className="text-muted text-[10px] font-bold uppercase tracking-widest">Part 3</span>
+          <span className="text-white font-black text-xl">7.5</span>
+        </div>
+      </div>
+
+      {/* 4 Criterion Scores */}
       <div className="grid grid-cols-2 gap-3">
         {SCORES.map(s => (
           <div key={s.label} className="bg-surface rounded-2xl p-4 flex flex-col gap-3">
@@ -187,6 +202,14 @@ export default function MockTab({ onGetPremium }) {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Examiner Comment */}
+      <div className="bg-surface rounded-r-2xl p-4 border-l-[4px] border-teal shadow-sm relative">
+        <span className="absolute -top-2 left-4 px-2 bg-surface text-teal font-bold text-[9px] uppercase tracking-widest rounded-full border border-white/5">Examiner Note</span>
+        <p className="text-white/80 text-[13px] font-medium leading-relaxed italic mt-1">
+          "A strong performance with natural fluency. You demonstrate a wide range of vocabulary. To reach an 8.0, focus on using more complex grammatical structures accurately without self-correction."
+        </p>
       </div>
 
       {/* Strengths */}
@@ -211,13 +234,46 @@ export default function MockTab({ onGetPremium }) {
         ))}
       </div>
 
-      <div className="flex flex-col gap-3">
+      {/* Collapsible Audio Players */}
+      <div className="flex flex-col gap-2">
+        <h3 className="text-muted text-[11px] font-bold uppercase tracking-widest px-1">Session Audio</h3>
+        {["Part 1", "Part 2", "Part 3"].map((p, i) => (
+          <details key={p} className="bg-surface rounded-xl overflow-hidden group">
+            <summary className="p-4 flex items-center justify-between cursor-pointer outline-none active:bg-elevated transition-colors border-l-2 border-transparent group-open:border-teal">
+              <span className="text-white font-semibold text-[14px]">{p} Recording</span>
+              <span className="text-muted text-xs">▼</span>
+            </summary>
+            <div className="p-4 pt-1 bg-surface flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                <button aria-label="Play" className="w-8 h-8 bg-teal text-black rounded-full flex items-center justify-center shrink-0">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg>
+                </button>
+                <div className="flex-1 h-1.5 bg-hint rounded-full overflow-hidden">
+                  <div className="h-full bg-teal rounded-full w-0" />
+                </div>
+                <span className="text-muted font-mono text-[10px] font-bold">0:00</span>
+              </div>
+            </div>
+          </details>
+        ))}
+      </div>
+
+      {/* Actions */}
+      <div className="flex flex-col gap-3 mt-4">
+        <div className="grid grid-cols-2 gap-3">
+          <button onClick={onGetPremium} className="bg-surface border border-white/5 text-white font-bold py-3.5 rounded-xl text-[13px] shadow-sm flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all">
+            <span className="text-xs" aria-hidden="true">🔒</span> Share Card
+          </button>
+          <button onClick={onGetPremium} className="bg-surface border border-white/5 text-white font-bold py-3.5 rounded-xl text-[13px] shadow-sm flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all">
+            <span className="text-xs" aria-hidden="true">🔒</span> Full Transcript
+          </button>
+        </div>
         <button onClick={()=>setScreen("list")}
-          className="w-full bg-teal text-black font-bold py-4 rounded-xl text-[14px] tracking-wide shadow-teal-glow active:scale-[0.98] transition-all">
+          className="w-full border border-teal/40 text-teal bg-teal/5 font-bold py-4 rounded-xl text-[14px] shadow-sm active:scale-[0.98] transition-all mt-2 uppercase tracking-wider">
           Retake This Mock
         </button>
         <button onClick={()=>setScreen("list")}
-          className="w-full text-muted text-[13px] font-semibold py-3 transition-all active:text-white">
+          className="w-full text-muted text-[13px] font-semibold py-3 transition-all hover:text-white uppercase tracking-wider mt-1">
           ← Back to Mocks
         </button>
       </div>

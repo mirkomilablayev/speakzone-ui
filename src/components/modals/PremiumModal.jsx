@@ -2,13 +2,6 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useTelegram } from "../../hooks/useTelegram";
 
-const BENEFITS = [
-  { icon: "🎤", titleKey: "premium.unlimited_mocks",  descKey: "premium.unlimited_mocks_desc" },
-  { icon: "🤖", titleKey: "premium.ai_feedback",      descKey: "premium.ai_feedback_desc" },
-  { icon: "✨", titleKey: "premium.ai_refinement",    descKey: "premium.ai_refinement_desc" },
-  { icon: "📚", titleKey: "premium.topic_vocab",      descKey: "premium.topic_vocab_desc" },
-];
-
 export default function PremiumModal({ open, onClose }) {
   const { t } = useTranslation();
   const { hapticFeedback } = useTelegram();
@@ -17,6 +10,13 @@ export default function PremiumModal({ open, onClose }) {
   const [success, setSuccess] = useState(false);
 
   if (!open) return null;
+
+  const BENEFITS = [
+    { icon: "🎤", title: t("premium.unlimited_mocks", "Unlimited Mocks"),         desc: t("premium.unlimited_mocks_desc", "Take as many full mock exams as you want.") },
+    { icon: "🤖", title: t("premium.ai_feedback", "Advanced AI Analytics"),       desc: t("premium.ai_feedback_desc", "Get deep insights into grammar and vocabulary.") },
+    { icon: "✨", title: t("premium.ai_refinement", "AI Answer Refinement"),      desc: t("premium.ai_refinement_desc", "See how a Band 8.5 speaker would answer.") },
+    { icon: "📚", title: t("premium.topic_vocab", "Premium Topic Vocabulary"),    desc: t("premium.topic_vocab_desc", "Unlock all advanced vocabulary lists.") },
+  ];
 
   const handleBuy = () => {
     hapticFeedback("impact");
@@ -55,15 +55,12 @@ export default function PremiumModal({ open, onClose }) {
             <button onClick={onClose} aria-label="Close"
               className="absolute top-6 right-6 w-10 h-10 rounded-full bg-elevated border border-white/5 flex items-center justify-center text-muted text-xs active:scale-90 transition-all z-20">✕</button>
 
-            <div className="flex flex-col items-start mt-4">
-              <span className="text-teal font-black text-[11px] uppercase tracking-[0.2em] border border-teal/20 bg-teal/5 px-3 py-1.5 rounded-full mb-6">
-                PRO MEMBER
-              </span>
+            <div className="flex flex-col items-start mt-6">
               <h2 className="text-white font-black text-[34px] tracking-tight leading-[1.1]">
                 Master IELTS<br/>Speaking <span className="text-teal">Faster.</span>
               </h2>
               <p className="text-muted text-[15px] leading-relaxed mt-4 max-w-[280px]">
-                {t("premium.subtitle", "The fastest way to achieve Band 8.5 with unlimited AI mocks and native feedback.")}
+                {t("premium.subtitle", "Reach your target band score faster with unlimited AI mocks and native feedback.")}
               </p>
             </div>
 
@@ -72,41 +69,56 @@ export default function PremiumModal({ open, onClose }) {
                 <div key={i} className="flex flex-col gap-1.5 bg-surface/50 p-4 rounded-2xl border border-white/5">
                   <div className="flex items-center gap-3">
                     <span className="text-2xl leading-none" aria-hidden="true">{b.icon}</span>
-                    <span className="text-white font-bold text-[16px] tracking-tight">{t(b.titleKey)}</span>
+                    <span className="text-white font-bold text-[16px] tracking-tight">{b.title}</span>
                   </div>
-                  <p className="text-muted text-[13px] leading-snug pl-[38px]">{t(b.descKey)}</p>
+                  <p className="text-muted text-[13px] leading-snug pl-[38px]">{b.desc}</p>
                 </div>
               ))}
             </div>
 
-            <div className="flex flex-col gap-3 mt-8">
-              <button
-                onClick={() => setPlan("yearly")}
-                className={`w-full flex flex-col p-5 rounded-2xl border-[2.5px] transition-all relative outline-none ${
-                  plan === "yearly" ? "border-teal bg-teal/5 shadow-teal-glow-sm" : "border-surface bg-surface"
-                }`}
-              >
-                <div className="absolute -top-3 left-4 px-3 py-1 bg-amber text-black font-black text-[10px] uppercase tracking-widest rounded-lg shadow-amber-glow">
-                  {t("premium.save", "SAVE 20%")}
-                </div>
-                <div className="flex items-center justify-between w-full mt-1">
-                  <span className={`font-bold text-[16px] ${plan==="yearly"?"text-teal":"text-white"}`}>{t("premium.yearly", "Annual Plan")}</span>
+            <div className="flex flex-col items-center mt-10 gap-4">
+              {/* TOGGLE */}
+              <div className="flex items-center bg-surface p-1 rounded-xl border border-white/5">
+                <button
+                  onClick={() => setPlan("monthly")}
+                  className={`px-5 py-2 rounded-lg text-[13px] font-bold transition-all ${
+                    plan === "monthly" ? "bg-teal text-black shadow-teal-glow-sm" : "text-muted hover:text-white"
+                  }`}
+                >
+                  {t("premium.monthly_tab", "Monthly")}
+                </button>
+                <button
+                  onClick={() => setPlan("yearly")}
+                  className={`px-5 py-2 rounded-lg text-[13px] font-bold transition-all flex items-center gap-2 ${
+                    plan === "yearly" ? "bg-teal text-black shadow-teal-glow-sm" : "text-muted hover:text-white"
+                  }`}
+                >
+                  {t("premium.yearly_tab", "Yearly")}
+                  {plan !== "yearly" && <span className="text-amber text-[9px] uppercase tracking-wider">-20%</span>}
+                </button>
+              </div>
+
+              {/* DYNAMIC PRICE CARD */}
+              <div className="w-full relative">
+                {plan === "yearly" && (
+                  <div className="absolute -top-3 left-4 px-3 py-1 bg-amber text-black font-black text-[10px] uppercase tracking-widest rounded-lg shadow-amber-glow z-10">
+                    {t("premium.save", "SAVE 20%")}
+                  </div>
+                )}
+                <div className="w-full flex items-center justify-between p-5 rounded-2xl border-2 border-teal bg-teal/5 shadow-teal-glow-sm">
+                  <span className="font-bold text-[16px] text-teal">
+                    {plan === "yearly" ? t("premium.yearly", "Annual Plan") : t("premium.monthly", "Monthly Plan")}
+                  </span>
                   <div className="flex flex-col items-end gap-1">
-                    <span className="text-white font-black text-[18px] leading-none">{t("premium.yearly_price", "790K UZS/yr")}</span>
-                    <span className="text-muted text-[11px] font-bold line-through leading-none">{t("premium.yearly_original", "1.1M UZS")}</span>
+                    <span className="text-white font-black text-[18px] leading-none">
+                      {plan === "yearly" ? t("premium.yearly_price", "790K UZS/yr") : t("premium.monthly_price", "99K UZS/mo")}
+                    </span>
+                    {plan === "yearly" && (
+                      <span className="text-muted text-[11px] font-bold line-through leading-none">{t("premium.yearly_original", "1.1M UZS")}</span>
+                    )}
                   </div>
                 </div>
-              </button>
-
-              <button
-                onClick={() => setPlan("monthly")}
-                className={`w-full flex items-center justify-between p-5 rounded-2xl border-[2.5px] transition-all outline-none ${
-                  plan === "monthly" ? "border-teal bg-teal/5 shadow-teal-glow-sm" : "border-surface bg-surface"
-                }`}
-              >
-                <span className={`font-bold text-[16px] ${plan==="monthly"?"text-teal":"text-white"}`}>{t("premium.monthly", "Monthly")}</span>
-                <span className="text-white font-black text-[18px] leading-none">{t("premium.monthly_price", "99K UZS")}</span>
-              </button>
+              </div>
             </div>
           </div>
 
