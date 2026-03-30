@@ -1,8 +1,8 @@
-export default function Card({ children, className = "", padding = "p-4", ...props }) {
+export default function Card({ children, className = "", onClick }) {
   return (
     <div
-      className={`bg-card card-border rounded-xl2 shadow-card ${padding} ${className}`}
-      {...props}
+      onClick={onClick}
+      className={`bg-surface rounded-2xl p-4 ${className}`}
     >
       {children}
     </div>

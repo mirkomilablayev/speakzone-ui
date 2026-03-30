@@ -12,131 +12,115 @@ const BENEFITS = [
 export default function PremiumModal({ open, onClose }) {
   const { t } = useTranslation();
   const { hapticFeedback } = useTelegram();
-  const [selectedPlan, setSelectedPlan] = useState("yearly");
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [isSuccess, setIsSuccess]       = useState(false);
+  const [plan, setPlan] = useState("yearly");
+  const [processing, setProcessing] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   if (!open) return null;
 
-  const handlePayment = () => {
+  const handleBuy = () => {
     hapticFeedback("impact");
-    setIsProcessing(true);
+    setProcessing(true);
     setTimeout(() => {
-      setIsProcessing(false);
-      setIsSuccess(true);
+      setProcessing(false);
+      setSuccess(true);
       hapticFeedback("success");
-      setTimeout(() => { setIsSuccess(false); onClose(); }, 2000);
+      setTimeout(() => { setSuccess(false); onClose(); }, 2000);
     }, 1500);
   };
 
   return (
     <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="premium-modal-title"
-      className="fixed inset-0 z-[100] bg-bg flex flex-col pointer-events-auto w-full animate-fade-in"
+      role="dialog" aria-modal="true"
+      className="fixed inset-0 z-[100] bg-[#070b13] flex flex-col pointer-events-auto w-full animate-fade-in"
       style={{ height: "100dvh", maxHeight: "100dvh" }}
     >
-      {isSuccess ? (
+      {success ? (
         <div className="flex-1 flex flex-col items-center justify-center p-10 text-center gap-6">
-          <div className="w-20 h-20 bg-green rounded-full flex items-center justify-center text-3xl text-white shadow-[0_0_40px_rgba(34,197,94,0.4)] animate-scale-in" aria-hidden="true">✓</div>
+          <div className="w-20 h-20 bg-teal/10 rounded-full flex items-center justify-center text-teal text-4xl shadow-teal-glow animate-scale-in" aria-hidden="true">✓</div>
           <div className="flex flex-col gap-2">
-            <h2 className="text-white font-black text-2xl tracking-tight">{t("premium.access_granted")}</h2>
-            <p className="text-muted text-xs font-medium">{t("premium.welcome_pro")}</p>
+            <h2 className="text-white font-black text-[28px] tracking-tight">{t("premium.access_granted", "Access Granted!")}</h2>
+            <p className="text-teal text-sm font-bold uppercase tracking-widest">{t("premium.welcome_pro", "Welcome to SpeakZone PRO")}</p>
           </div>
         </div>
       ) : (
-        <div className="flex-1 flex flex-col w-full max-w-app mx-auto min-h-0">
+        <div className="flex-1 flex flex-col w-full mx-auto min-h-0 relative">
+          
+          {/* ── Background Decals ── */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-teal/10 blur-[80px] rounded-full pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber/5 blur-[80px] rounded-full pointer-events-none" />
 
-          {/* ── Scrollable content ── */}
-          <div className="flex-1 overflow-y-auto hide-scrollbar px-5 pt-4 pb-3">
+          {/* ── Scrollable ── */}
+          <div className="flex-1 overflow-y-auto hide-scrollbar px-6 pt-6 pb-4 relative z-10">
+            <button onClick={onClose} aria-label="Close"
+              className="absolute top-6 right-6 w-10 h-10 rounded-full bg-elevated border border-white/5 flex items-center justify-center text-muted text-xs active:scale-90 transition-all z-20">✕</button>
 
-            {/* Header */}
-            <div className="flex items-center justify-between w-full pt-1">
-              <button onClick={onClose} aria-label="Close"
-                className="w-9 h-9 rounded-full bg-card-raised border border-white/10 flex items-center justify-center text-white text-sm z-20 active:scale-95 transition-all shadow-xl">✕</button>
-              <div className="text-[10px] font-black text-gold border border-gold/20 bg-gold/5 px-3 py-1.5 rounded-full uppercase tracking-widest">
-                {t("premium.badge")}
-              </div>
-            </div>
-
-            {/* Title */}
-            <div className="flex flex-col items-center text-center mt-2">
-              <div className="w-16 h-16 rounded-[20px] bg-gold-gradient shadow-gold-glow flex items-center justify-center text-3xl mb-3 border border-white/20" aria-hidden="true">👑</div>
-              <h2 id="premium-modal-title" className="text-white font-black text-[26px] tracking-tight leading-tight">
-                {t("premium.title")} <span className="text-transparent bg-clip-text bg-gold-gradient">{t("premium.pro")}</span>
+            <div className="flex flex-col items-start mt-4">
+              <span className="text-teal font-black text-[11px] uppercase tracking-[0.2em] border border-teal/20 bg-teal/5 px-3 py-1.5 rounded-full mb-6">
+                PRO MEMBER
+              </span>
+              <h2 className="text-white font-black text-[34px] tracking-tight leading-[1.1]">
+                Master IELTS<br/>Speaking <span className="text-teal">Faster.</span>
               </h2>
-              <p className="text-muted text-[13px] font-medium leading-tight mt-1.5 px-4 opacity-80">{t("premium.subtitle")}</p>
+              <p className="text-muted text-[15px] leading-relaxed mt-4 max-w-[280px]">
+                {t("premium.subtitle", "The fastest way to achieve Band 8.5 with unlimited AI mocks and native feedback.")}
+              </p>
             </div>
 
-            {/* Benefits */}
-            <div className="flex flex-col gap-2.5 w-full px-1 mt-3">
+            <div className="flex flex-col gap-5 mt-10">
               {BENEFITS.map((b, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  <div className="w-11 h-11 rounded-[14px] bg-card-raised border border-white/5 flex items-center justify-center text-lg shrink-0 shadow-sm" aria-hidden="true">
-                    {b.icon}
+                <div key={i} className="flex flex-col gap-1.5 bg-surface/50 p-4 rounded-2xl border border-white/5">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl leading-none" aria-hidden="true">{b.icon}</span>
+                    <span className="text-white font-bold text-[16px] tracking-tight">{t(b.titleKey)}</span>
                   </div>
-                  <div className="flex flex-col gap-0.5">
-                    <span className="text-white font-black text-[14px] tracking-tight leading-none">{t(b.titleKey)}</span>
-                    <span className="text-muted text-[11px] opacity-70 leading-none tracking-wide">{t(b.descKey)}</span>
-                  </div>
+                  <p className="text-muted text-[13px] leading-snug pl-[38px]">{t(b.descKey)}</p>
                 </div>
               ))}
             </div>
 
-            {/* Pricing */}
-            <div className="w-full flex flex-col gap-2.5 mt-4">
+            <div className="flex flex-col gap-3 mt-8">
               <button
-                onClick={() => setSelectedPlan("monthly")}
-                aria-pressed={selectedPlan === "monthly"}
-                className={`w-full flex items-center justify-between px-5 py-3.5 rounded-xl border-2 transition-all ${
-                  selectedPlan === "monthly" ? "border-accent bg-accent/10 shadow-[0_0_20px_rgba(79,142,247,0.15)]" : "border-white/5 bg-white/5"
+                onClick={() => setPlan("yearly")}
+                className={`w-full flex flex-col p-5 rounded-2xl border-[2.5px] transition-all relative outline-none ${
+                  plan === "yearly" ? "border-teal bg-teal/5 shadow-teal-glow-sm" : "border-surface bg-surface"
                 }`}
               >
-                <span className="text-white font-bold text-[14px]">{t("premium.monthly")}</span>
-                <span className="text-white font-black text-[14px]">{t("premium.monthly_price")}</span>
-              </button>
-
-              <button
-                onClick={() => setSelectedPlan("yearly")}
-                aria-pressed={selectedPlan === "yearly"}
-                className={`w-full flex flex-col px-5 py-3.5 rounded-xl border-2 transition-all relative ${
-                  selectedPlan === "yearly" ? "border-gold bg-gold/10 shadow-[0_0_24px_rgba(245,197,24,0.15)]" : "border-white/5 bg-white/5"
-                }`}
-              >
-                <div className="absolute -top-[10px] left-4 px-2 py-0.5 bg-gold-gradient text-black text-[9px] font-black uppercase tracking-widest rounded-md shadow-[0_4px_12px_rgba(245,197,24,0.4)] leading-snug">
-                  {t("premium.save")}
+                <div className="absolute -top-3 left-4 px-3 py-1 bg-amber text-black font-black text-[10px] uppercase tracking-widest rounded-lg shadow-amber-glow">
+                  {t("premium.save", "SAVE 20%")}
                 </div>
-                <div className="flex items-center justify-between w-full">
-                  <span className="text-white font-bold text-[14px]">{t("premium.yearly")}</span>
-                  <div className="flex flex-col items-end gap-0.5">
-                    <span className="text-white font-black text-[14px] leading-none">{t("premium.yearly_price")}</span>
-                    <span className="text-muted text-[9px] font-bold line-through leading-none opacity-60">{t("premium.yearly_original")}</span>
+                <div className="flex items-center justify-between w-full mt-1">
+                  <span className={`font-bold text-[16px] ${plan==="yearly"?"text-teal":"text-white"}`}>{t("premium.yearly", "Annual Plan")}</span>
+                  <div className="flex flex-col items-end gap-1">
+                    <span className="text-white font-black text-[18px] leading-none">{t("premium.yearly_price", "790K UZS/yr")}</span>
+                    <span className="text-muted text-[11px] font-bold line-through leading-none">{t("premium.yearly_original", "1.1M UZS")}</span>
                   </div>
                 </div>
               </button>
-            </div>
 
+              <button
+                onClick={() => setPlan("monthly")}
+                className={`w-full flex items-center justify-between p-5 rounded-2xl border-[2.5px] transition-all outline-none ${
+                  plan === "monthly" ? "border-teal bg-teal/5 shadow-teal-glow-sm" : "border-surface bg-surface"
+                }`}
+              >
+                <span className={`font-bold text-[16px] ${plan==="monthly"?"text-teal":"text-white"}`}>{t("premium.monthly", "Monthly")}</span>
+                <span className="text-white font-black text-[18px] leading-none">{t("premium.monthly_price", "99K UZS")}</span>
+              </button>
+            </div>
           </div>
 
-          {/* ── Sticky CTA — always visible ── */}
-          <div className="shrink-0 px-5 pt-3 pb-5 border-t border-white/5 bg-bg">
+          {/* ── CTA ── */}
+          <div className="shrink-0 px-6 pt-4 pb-8 border-t border-white/5 bg-[#070b13] relative z-20">
             <button
-              onClick={handlePayment}
-              disabled={isProcessing}
-              className={`w-full font-black py-4 rounded-xl text-[15px] active:scale-[0.98] transition-all flex items-center justify-center uppercase tracking-widest
-                focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg
-                disabled:opacity-60 disabled:cursor-not-allowed ${
-                  selectedPlan === "yearly"
-                    ? "bg-gold-gradient text-black shadow-gold-glow focus-visible:ring-gold"
-                    : "bg-primary-gradient text-white shadow-primary-glow focus-visible:ring-accent"
-                }`}
+              onClick={handleBuy}
+              disabled={processing}
+              className="w-full bg-teal text-black font-bold py-4 rounded-xl text-[16px] shadow-teal-glow flex items-center justify-center tracking-wide active:scale-[0.98] transition-all disabled:opacity-60"
             >
-              {isProcessing ? (
-                <div className={`w-5 h-5 border-[3px] border-t-transparent rounded-full animate-spin ${selectedPlan === "yearly" ? "border-black/20" : "border-white/20"}`}
-                     role="status" aria-label="Processing" />
+              {processing ? (
+                <div className="w-6 h-6 border-[3px] border-black/20 border-t-black rounded-full animate-spin" />
               ) : (
-                t("premium.continue")
+                t("premium.continue", "Unlock PRO Access")
               )}
             </button>
           </div>
